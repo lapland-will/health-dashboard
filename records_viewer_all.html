@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金明 - 完整记录管理系统</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .links {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .link-item {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .update-info {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏊 金明 - 完整记录管理系统</h1>
+            <p>每日健康报告 + 训练日志 | 每3小时自动更新</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">每日报告</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">训练日志</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">30</div>
+                    <div class="stat-label">最近天数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">14:07</div>
+                    <div class="stat-label">更新时间</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="links">
+            <h3 style="color: #667eea;">📊 所有看板和报告</h3>
+            <a href="super_dashboard.html" class="link-item" target="_blank">📊 超级增强看板</a>
+            <a href="dashboard_with_charts.html" class="link-item" target="_blank">📈 专业可视化看板</a>
+            <a href="dashboard_2026-02-04.html" class="link-item" target="_blank">📋 基础HTML看板</a>
+            <a href="dashboard_2026-02-04.md" class="link-item" target="_blank">📝 Markdown完整看板</a>
+        </div>
+
+        <div class="update-info">
+            <strong>最后更新：</strong>2026-02-04 14:07:45<br>
+            <strong>下次更新：</strong>17:07（每3小时自动刷新）<br>
+            <strong>系统状态：</strong>✅ 所有功能正常运行
+        </div>
+    </div>
+
+    <script>
+        // 自动刷新（每3小时 = 3 * 60 * 60 * 1000毫秒）
+        setTimeout(function() {
+            location.reload();
+        }, 3 * 60 * 60 * 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+name: 每日健康看板自动更新
+
+on:
+  schedule:
+    # UTC 3:00 = 北京时间 11:00 (每天11点)
+    - cron: '0 3 * * *'
+  # 支持手动触发
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '触发原因'
+        required: false
+        type: string
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🐍 设置Python环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+
+    - name: 📦 安装依赖
+      run: |
+        pip install pandas requests openpyxl
+
+    - name: 🔐 设置Ourating API Token
+      env:
+        OURA_ACCESS_TOKEN: ${{ secrets.OURA_ACCESS_TOKEN }}
+      run: |
+        echo "API Token已设置（隐藏）"
+
+    - name: 🏃 运行健康看板生成脚本
+      env:
+        OURA_ACCESS_TOKEN: ${{ secrets.OURA_ACCESS_TOKEN }}
+      run: |
+        echo "开始运行健康看板生成..."
+        python3 ultimate_dashboard.py
+
+        if [ $? -eq 0 ]; then
+          echo "✅ 健康看板生成成功"
+
+          # 统计生成的文件
+          echo "📊 今日生成的文件："
+          ls -lh DailyReports/*.html 2>/dev/null || echo "  无HTML文件"
+          ls -lh DailyReports/*.md 2>/dev/null || echo "  无Markdown文件"
+
+          # 检查图表
+          if [ -d "DailyReports/charts" ]; then
+            echo "📈 图表文件："
+            ls -lh DailyReports/charts/*.png 2>/dev/null | wc -l || echo "  图表缺失"
+          fi
+        else
+          echo "❌ 健康看板生成失败"
+          exit 1
+        fi
+
+    - name: 📊 显示生成统计
+      run: |
+        echo "📊 生成统计："
+        echo "HTML文件数：$(ls DailyReports/*.html 2>/dev/null | wc -l)"
+        echo "图表文件数：$(ls DailyReports/charts/*.png 2>/dev/null | wc -l)"
+        echo "Markdown文件数：$(ls DailyReports/*.md 2>/dev/null | wc -l)"
+
+    - name: 💾 提交变更到仓库
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions Bot"
+
+        # 添加所有变更
+        git add .
+
+        # 检查是否有变更
+        if git diff --staged --quiet; then
+          echo "✅ 没有新变更需要提交"
+        else
+          git commit -m "🤖 自动推送: 每日健康看板更新 - $(date +'%Y-%m-%d %H:%M:%S') [自动]"
+
+          echo "📝 提交信息："
+          git log -1 --oneline
+        fi
+
+    - name: 🚀 推送到GitHub
+      run: |
+        git push
+        echo "✅ 代码已推送到main分支"
+
+    - name: ✅ 部署成功通知
+      if: success()
+        run: |
+          echo "✅ 健康看板已成功更新并部署！"
+          echo "🌐 网站地址：https://williamjoy-health.netlify.app"
+      else
+        run: |
+          echo "❌ 部署失败，请检查日志"
+
+    - name: 🔔 发送通知（可选）
+      if: success()
+        run: |
+          echo "💡 可选：配置Slack/Email通知"
+          echo "   推送内容：健康看板已更新"

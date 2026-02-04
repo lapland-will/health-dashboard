@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>训练日志输入系统（本地版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-5px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .lung-measurements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .measurement-input {
+            position: relative;
+        }
+
+        .measurement-input input {
+            padding-right: 40px;
+        }
+
+        .measurement-input span {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .records-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .record-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .record-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .record-details {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            margin-left: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 训练日志输入系统</h1>
+            <p>支持训练日志、肺活量测量、个人最好成绩的录入与管理</p>
+            <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                💾 数据保存在浏览器本地存储中，无需服务器
+            </p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('training')">🏋️ 训练日志</button>
+            <button class="nav-tab" onclick="showTab('lung')">🫁 肺活量测量</button>
+            <button class="nav-tab" onclick="showTab('pb')">🏆 个人最好成绩</button>
+            <button class="nav-tab" onclick="showTab('view')">📊 数据查看</button>
+            <button class="nav-tab" onclick="showTab('export')">💾 导出/导入</button>
+        </div>
+
+        <!-- 训练日志 -->
+        <div id="training" class="tab-content active">
+            <h2>添加训练日志</h2>
+            <div id="training-alert" class="alert"></div>
+
+            <form id="training-form" onsubmit="submitTrainingLog(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>日期 *</label>
+                        <input type="date" id="training-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>训练类型 *</label>
+                        <select id="training-type" required>
+                            <option value="">请选择...</option>
+                            <option value="泳池训练">泳池训练</option>
+                            <option value="陆地训练">陆地训练</option>
+                            <option value="休息日">休息日</option>
+                            <option value="比赛">比赛</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>训练内容 *</label>
+                    <textarea id="training-content" placeholder="描述今天的训练内容..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>距离（米）</label>
+                        <input type="number" id="training-distance" placeholder="如: 1000">
+                    </div>
+                    <div class="form-group">
+                        <label>时间（秒）</label>
+                        <input type="number" id="training-time" placeholder="如: 548">
+                    </div>
+                    <div class="form-group">
+                        <label>尝试次数</label>
+                        <input type="number" id="training-attempts" placeholder="如: 6">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="training-notes" placeholder="身体感觉、疲劳度等..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">提交训练日志</button>
+            </form>
+        </div>
+
+        <!-- 肺活量测量 -->
+        <div id="lung" class="tab-content">
+            <h2>肺活量测量记录</h2>
+            <div id="lung-alert" class="alert"></div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="lung-pb">8000</div>
+                    <div class="stat-label">PB (ml)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lung-count">50</div>
+                    <div class="stat-label">总记录数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lung-avg">0</div>
+                    <div class="stat-label">平均值 (ml)</div>
+                </div>
+            </div>
+
+            <form id="lung-form" onsubmit="submitLungCapacity(event)">
+                <div class="form-group">
+                    <label>日期 *</label>
+                    <input type="date" id="lung-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label>测量值（ml）- 可输入多个测量值</label>
+                    <div class="lung-measurements">
+                        <div class="measurement-input">
+                            <input type="number" class="lung-measurement" placeholder="第一次">
+                            <span>ml</span>
+                        </div>
+                        <div class="measurement-input">
+                            <input type="number" class="lung-measurement" placeholder="第二次">
+                            <span>ml</span>
+                        </div>
+                        <div class="measurement-input">
+                            <input type="number" class="lung-measurement" placeholder="第三次">
+                            <span>ml</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="lung-notes" placeholder="测量条件、感受等..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">提交肺活量数据</button>
+            </form>
+
+            <h3 style="margin-top: 30px;">最近记录</h3>
+            <div id="lung-records" class="records-list"></div>
+        </div>
+
+        <!-- 个人最好成绩 -->
+        <div id="pb" class="tab-content">
+            <h2>个人最好成绩（PB）</h2>
+            <div id="pb-alert" class="alert"></div>
+
+            <h3>🏊 泳池成绩</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-dnf">212</div>
+                    <div class="stat-label">DNF (米)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-dyn">319</div>
+                    <div class="stat-label">DYN (米)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-dynb">287</div>
+                    <div class="stat-label">DYNB (米)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-sta">9:08</div>
+                    <div class="stat-label">静态闭气</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">🫁 肺活量</h3>
+            <div class="stats-grid" style="grid-template-columns: repeat(1, 1fr); max-width: 400px;">
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-lung">7962</div>
+                    <div class="stat-label">肺活量 (ml)</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">🏋️ 陆地测试</h3>
+            <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px;">
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-123">13:27</div>
+                    <div class="stat-label">123挑战</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pb-squat">83</div>
+                    <div class="stat-label">空肺深蹲 (个)</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">更新PB</h3>
+            <form id="pb-form" onsubmit="submitPB(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>项目 *</label>
+                        <select id="pb-event" required>
+                            <option value="">请选择...</option>
+                            <option value="DNF">DNF (无蹼动态)</option>
+                            <option value="DYN">DYN (动态有蹼)</option>
+                            <option value="DYNB">DYNB (双蹼动态)</option>
+                            <option value="STA">STA (静态闭气)</option>
+                            <option value="肺活量">肺活量</option>
+                            <option value="123挑战">123挑战</option>
+                            <option value="空肺深蹲">空肺深蹲</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>成绩 *</label>
+                        <input type="text" id="pb-value" placeholder="米数、时间(如: 9:08)、ml、个" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>日期</label>
+                        <input type="date" id="pb-date">
+                    </div>
+                    <div class="form-group">
+                        <label>地点</label>
+                        <input type="text" id="pb-location" placeholder="如: 上海游泳馆">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">更新PB</button>
+            </form>
+        </div>
+
+        <!-- 数据查看 -->
+        <div id="view" class="tab-content">
+            <h2>数据查看与分析</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>查看类型</label>
+                    <select id="view-type" onchange="loadViewData()">
+                        <option value="training">训练日志</option>
+                        <option value="lung">肺活量记录</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>时间范围</label>
+                    <select id="view-range" onchange="loadViewData()">
+                        <option value="7">最近7天</option>
+                        <option value="30" selected>最近30天</option>
+                        <option value="90">最近90天</option>
+                        <option value="365">最近一年</option>
+                        <option value="all">全部</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="view-data"></div>
+        </div>
+
+        <!-- 导出/导入 -->
+        <div id="export" class="tab-content">
+            <h2>导出/导入数据</h2>
+
+            <div class="form-group">
+                <button class="btn btn-primary" onclick="exportData()">导出所有数据（JSON）</button>
+                <button class="btn btn-success" style="margin-left: 10px;" onclick="document.getElementById('import-file').click()">导入数据（JSON）</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3>数据说明</h3>
+                <p>所有数据保存在浏览器本地存储中，可以：</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>导出为JSON文件备份</li>
+                    <li>导入JSON文件恢复数据</li>
+                    <li>在不同设备间同步数据</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化数据
+        const DEFAULT_PB = {
+            "泳池成绩": {
+                DNF: {name: "无蹼动态", value: 212, unit: "米", date: null, location: null},
+                DYN: {name: "动态有蹼", value: 319, unit: "米", date: null, location: null},
+                DYNB: {name: "双蹼动态", value: 287, unit: "米", date: null, location: null},
+                STA: {name: "静态闭气", value: "9:08", seconds: 548, unit: "分:秒", date: null, location: null}
+            },
+            "肺活量": {
+                name: "肺活量",
+                value: 7962,
+                unit: "ml",
+                date: null
+            },
+            "陆地测试": {
+                "123挑战": {name: "123挑战", value: "13:27", seconds: 807, unit: "分:秒", date: null, description: "1分钟深蹲+2分钟平板+3分钟靠墙蹲"},
+                "空肺深蹲": {name: "空肺深蹲", value: 83, unit: "个", date: null, description: "空肺状态深蹲"}
+            }
+        };
+
+        // 从localStorage加载数据
+        function loadData(key, defaultValue = {}) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        }
+
+        // 保存数据到localStorage
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // 标签页切换
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            // 加载数据
+            if (tabId === 'lung') loadLungData();
+            if (tabId === 'pb') loadPBData();
+            if (tabId === 'view') loadViewData();
+        }
+
+        // 显示提示信息
+        function showAlert(elementId, message, isSuccess) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = 'alert show ' + (isSuccess ? 'alert-success' : 'alert-error');
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        // 提交训练日志
+        function submitTrainingLog(e) {
+            e.preventDefault();
+
+            const log = {
+                id: Date.now(),
+                date: document.getElementById('training-date').value,
+                training_type: document.getElementById('training-type').value,
+                content: document.getElementById('training-content').value,
+                metrics: {
+                    distance: document.getElementById('training-distance').value || null,
+                    time: document.getElementById('training-time').value || null,
+                    attempts: document.getElementById('training-attempts').value || null
+                },
+                notes: document.getElementById('training-notes').value,
+                created_at: new Date().toISOString()
+            };
+
+            const logs = loadData('training_logs', {logs: []});
+            logs.logs.push(log);
+            saveData('training_logs', logs);
+
+            showAlert('training-alert', '✅ 训练日志已保存！', true);
+            document.getElementById('training-form').reset();
+            document.getElementById('training-date').value = new Date().toISOString().split('T')[0];
+        }
+
+        // 提交肺活量数据
+        function submitLungCapacity(e) {
+            e.preventDefault();
+
+            const measurements = [];
+            document.querySelectorAll('.lung-measurement').forEach(input => {
+                if (input.value) {
+                    measurements.push(parseInt(input.value));
+                }
+            });
+
+            if (measurements.length === 0) {
+                showAlert('lung-alert', '❌ 请至少输入一个测量值', false);
+                return;
+            }
+
+            const max_today = Math.max(...measurements);
+
+            const record = {
+                id: Date.now(),
+                date: document.getElementById('lung-date').value,
+                measurements: measurements,
+                max_today: max_today,
+                notes: document.getElementById('lung-notes').value,
+                created_at: new Date().toISOString()
+            };
+
+            const lungData = loadData('lung_capacity', {pb: 8000, records: []});
+            lungData.records.push(record);
+
+            // 更新PB
+            if (max_today > lungData.pb) {
+                lungData.pb = max_today;
+                lungData.pb_date = record.date;
+            }
+
+            saveData('lung_capacity', lungData);
+
+            showAlert('lung-alert', `✅ 肺活量数据已保存！最大值: ${max_today} ml`, true);
+            document.getElementById('lung-form').reset();
+            document.getElementById('lung-date').value = new Date().toISOString().split('T')[0];
+            loadLungData();
+        }
+
+        // 提交PB
+        function submitPB(e) {
+            e.preventDefault();
+
+            const event = document.getElementById('pb-event').value;
+            const value = document.getElementById('pb-value').value;
+            const date = document.getElementById('pb-date').value;
+            const location = document.getElementById('pb-location').value;
+
+            const pbData = loadData('personal_best', DEFAULT_PB);
+
+            // 根据项目类型更新
+            if (['DNF', 'DYN', 'DYNB'].includes(event)) {
+                // 泳池成绩 - 距离项目
+                pbData["泳池成绩"][event].value = parseInt(value);
+                pbData["泳池成绩"][event].date = date;
+                pbData["泳池成绩"][event].location = location;
+            } else if (event === 'STA') {
+                // 静态闭气 - 时间格式
+                let seconds;
+                if (value.includes(':')) {
+                    const parts = value.split(':');
+                    seconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                } else {
+                    seconds = parseInt(value);
+                }
+                pbData["泳池成绩"][event].value = value;
+                pbData["泳池成绩"][event].seconds = seconds;
+                pbData["泳池成绩"][event].date = date;
+                pbData["泳池成绩"][event].location = location;
+            } else if (event === '肺活量') {
+                // 肺活量
+                pbData["肺活量"].value = parseInt(value);
+                pbData["肺活量"].date = date;
+            } else if (event === '123挑战') {
+                // 123挑战 - 时间格式
+                let seconds;
+                if (value.includes(':')) {
+                    const parts = value.split(':');
+                    seconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                } else {
+                    seconds = parseInt(value);
+                }
+                pbData["陆地测试"]["123挑战"].value = value;
+                pbData["陆地测试"]["123挑战"].seconds = seconds;
+                pbData["陆地测试"]["123挑战"].date = date;
+            } else if (event === '空肺深蹲') {
+                // 空肺深蹲
+                pbData["陆地测试"]["空肺深蹲"].value = parseInt(value);
+                pbData["陆地测试"]["空肺深蹲"].date = date;
+            }
+
+            saveData('personal_best', pbData);
+
+            showAlert('pb-alert', `✅ ${event} PB已更新为 ${value}！`, true);
+            document.getElementById('pb-form').reset();
+            loadPBData();
+        }
+
+        // 加载肺活量数据
+        function loadLungData() {
+            const lungData = loadData('lung_capacity', {pb: 8000, records: []});
+            const records = lungData.records || [];
+
+            document.getElementById('lung-pb').textContent = lungData.pb;
+            document.getElementById('lung-count').textContent = records.length;
+
+            const avg = records.length > 0 ?
+                Math.round(records.reduce((sum, r) => sum + r.max_today, 0) / records.length) : 0;
+            document.getElementById('lung-avg').textContent = avg;
+
+            // 显示最近记录
+            const recentRecords = records.slice(-10).reverse();
+            const recordsHtml = recentRecords.map(r => `
+                <div class="record-item">
+                    <div class="record-date">${r.date} <span class="badge">${r.max_today} ml</span></div>
+                    <div class="record-details">
+                        测量值: ${r.measurements.join(', ')} ml
+                        ${r.notes ? `<br>备注: ${r.notes}` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('lung-records').innerHTML = recordsHtml || '<p style="text-align: center; color: #999;">暂无记录</p>';
+        }
+
+        // 加载PB数据
+        function loadPBData() {
+            const pbData = loadData('personal_best', DEFAULT_PB);
+
+            // 泳池成绩
+            document.getElementById('pb-dnf').textContent = pbData["泳池成绩"]?.DNF?.value || 212;
+            document.getElementById('pb-dyn').textContent = pbData["泳池成绩"]?.DYN?.value || 319;
+            document.getElementById('pb-dynb').textContent = pbData["泳池成绩"]?.DYNB?.value || 287;
+            document.getElementById('pb-sta').textContent = pbData["泳池成绩"]?.STA?.value || '9:08';
+
+            // 肺活量
+            document.getElementById('pb-lung').textContent = pbData["肺活量"]?.value || 7962;
+
+            // 陆地测试
+            document.getElementById('pb-123').textContent = pbData["陆地测试"]?.["123挑战"]?.value || '13:27';
+            document.getElementById('pb-squat').textContent = pbData["陆地测试"]?.["空肺深蹲"]?.value || 83;
+        }
+
+        // 加载查看数据
+        function loadViewData() {
+            const type = document.getElementById('view-type').value;
+            const range = document.getElementById('view-range').value;
+            const container = document.getElementById('view-data');
+
+            if (type === 'training') {
+                const logsData = loadData('training_logs', {logs: []});
+                let logs = logsData.logs || [];
+
+                // 过滤
+                if (range !== 'all') {
+                    const days = parseInt(range);
+                    const cutoff = new Date();
+                    cutoff.setDate(cutoff.getDate() - days);
+                    logs = logs.filter(log => new Date(log.date) >= cutoff);
+                }
+
+                // 排序
+                logs = logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (logs.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #999;">暂无训练日志</p>';
+                    return;
+                }
+
+                let html = '<table class="data-table"><thead><tr><th>日期</th><th>类型</th><th>内容</th><th>距离</th><th>时间</th></tr></thead><tbody>';
+                html += logs.map(log => `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td>${log.training_type}</td>
+                        <td>${log.content.substring(0, 50)}...</td>
+                        <td>${log.metrics.distance || '-'}</td>
+                        <td>${log.metrics.time || '-'}</td>
+                    </tr>
+                `).join('');
+                html += '</tbody></table>';
+                container.innerHTML = html;
+
+            } else if (type === 'lung') {
+                const lungData = loadData('lung_capacity', {records: []});
+                let records = lungData.records || [];
+
+                // 过滤
+                if (range !== 'all') {
+                    const days = parseInt(range);
+                    const cutoff = new Date();
+                    cutoff.setDate(cutoff.getDate() - days);
+                    records = records.filter(r => new Date(r.date) >= cutoff);
+                }
+
+                // 排序
+                records = records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (records.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #999;">暂无肺活量记录</p>';
+                    return;
+                }
+
+                let html = '<table class="data-table"><thead><tr><th>日期</th><th>最大值(ml)</th><th>测量值</th></tr></thead><tbody>';
+                html += records.map(r => `
+                    <tr>
+                        <td>${r.date}</td>
+                        <td><strong>${r.max_today}</strong></td>
+                        <td>${r.measurements.join(', ')}</td>
+                    </tr>
+                `).join('');
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            }
+        }
+
+        // 导出数据
+        function exportData() {
+            const data = {
+                training_logs: loadData('training_logs', {logs: []}),
+                lung_capacity: loadData('lung_capacity', {pb: 8000, records: []}),
+                personal_best: loadData('personal_best', DEFAULT_PB),
+                exported_at: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `training_logs_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 导入数据
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (data.training_logs) {
+                        saveData('training_logs', data.training_logs);
+                    }
+                    if (data.lung_capacity) {
+                        saveData('lung_capacity', data.lung_capacity);
+                    }
+                    if (data.personal_best) {
+                        saveData('personal_best', data.personal_best);
+                    }
+
+                    alert('✅ 数据导入成功！');
+                    location.reload();
+                } catch (error) {
+                    alert('❌ 导入失败：' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 设置默认日期
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('training-date').value = today;
+            document.getElementById('lung-date').value = today;
+
+            // 加载数据
+            loadLungData();
+            loadPBData();
+        });
+
+        console.log('📝 训练日志输入系统已加载（本地版本）');
+        console.log('💾 数据保存在浏览器localStorage中');
+    </script>
+</body>
+</html>

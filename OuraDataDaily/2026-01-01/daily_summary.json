@@ -1,0 +1,40 @@
+{
+  "date": "2026-01-01",
+  "readiness": {
+    "id": "f132e119-fa05-4394-bf07-01b0bedf846d",
+    "contributors": {
+      "activity_balance": 83,
+      "body_temperature": 97,
+      "hrv_balance": 87,
+      "previous_day_activity": 85,
+      "previous_night": 55,
+      "recovery_index": 86,
+      "resting_heart_rate": 91,
+      "sleep_balance": 93,
+      "sleep_regularity": 83
+    },
+    "day": "2026-01-01",
+    "score": 83,
+    "temperature_deviation": -0.22,
+    "temperature_trend_deviation": -0.09,
+    "timestamp": "2026-01-01T00:00:00.000+00:00"
+  },
+  "sleep": {
+    "id": "e8005f56-5243-4087-b8aa-4822b6499db2",
+    "contributors": {
+      "deep_sleep": 83,
+      "efficiency": 86,
+      "latency": 83,
+      "rem_sleep": 71,
+      "restfulness": 62,
+      "timing": 59,
+      "total_sleep": 59
+    },
+    "day": "2026-01-01",
+    "score": 68,
+    "timestamp": "2026-01-01T00:00:00.000+00:00"
+  },
+  "activity": null,
+  "heartrate": [],
+  "sleep_timeseries": []
+}

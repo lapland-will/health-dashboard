@@ -1,0 +1,56 @@
+{
+  "泳池成绩": {
+    "DNF": {
+      "name": "无蹼动态",
+      "value": 212,
+      "unit": "米",
+      "date": null,
+      "location": null
+    },
+    "DYN": {
+      "name": "动态有蹼",
+      "value": 319,
+      "unit": "米",
+      "date": null,
+      "location": null
+    },
+    "DYNB": {
+      "name": "双蹼动态",
+      "value": 287,
+      "unit": "米",
+      "date": null,
+      "location": null
+    },
+    "STA": {
+      "name": "静态闭气",
+      "value": "9:08",
+      "seconds": 548,
+      "unit": "分:秒",
+      "date": null,
+      "location": null
+    }
+  },
+  "肺活量": {
+    "name": "肺活量",
+    "value": 7962,
+    "unit": "ml",
+    "date": null
+  },
+  "陆地测试": {
+    "123挑战": {
+      "name": "123挑战",
+      "value": "13:27",
+      "seconds": 807,
+      "unit": "分:秒",
+      "date": null,
+      "description": "1分钟深蹲+2分钟平板+3分钟靠墙蹲"
+    },
+    "空肺深蹲": {
+      "name": "空肺深蹲",
+      "value": 83,
+      "unit": "个",
+      "date": null,
+      "description": "空肺状态深蹲"
+    }
+  }
+}
