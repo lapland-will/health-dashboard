@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金明健康看板 - 部署指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .status {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .step {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .step-content {
+            margin-left: 45px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .button-small {
+            padding: 10px 20px;
+            font-size: 0.95em;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .cost-free {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .final-message h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .commands {
+            background: #263238;
+            color: #aed581;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .section-title {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 金明健康看板 - 部署指南</h1>
+        <p class="subtitle">5步完成免费网站部署 + 每天11点自动更新</p>
+
+        <div class="status">
+            ✅ Git仓库已初始化完成！<br>
+            143个文件已准备就绪，等待部署...
+        </div>
+
+        <div class="section-title">📋 部署总览</div>
+
+        <div class="step">
+            <h2><span class="step-number">0</span>部署方案</h2>
+            <div class="step-content">
+                <div class="info-box">
+                    <strong>🌟 免费部署方案</strong><br>
+                    • 托管平台：Netlify <span class="cost-free">$0/年</span><br>
+                    • 免费域名：williamjoy-health.netlify.app <span class="cost-free">$0/年</span><br>
+                    • SSL证书：自动配置 <span class="cost-free">$0/年</span><br>
+                    • 每天11点自动更新：GitHub Actions <span class="cost-free">$0/年</span><br><br>
+                    <strong>总成本：$0/年 ✅</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">🎯 开始部署（5步，15分钟）</div>
+
+        <div class="step">
+            <h2><span class="step-number">1</span>创建GitHub仓库</h2>
+            <div class="step-content">
+                <p><strong>方式A：Web界面创建（推荐）</strong></p>
+                <ol>
+                    <li>点击下方按钮打开GitHub创建页面：</li>
+                </ol>
+                <a href="https://github.com/new" target="_blank" class="button">📂 创建GitHub仓库</a>
+                <div class="warning-box">
+                    <strong>⚠️ 重要设置：</strong><br>
+                    • Repository name: <code>jinming-health-dashboard</code><br>
+                    • Description: <code>金明健康看板系统 - 自由潜水世界纪录保持者</code><br>
+                    • <span class="highlight">必须选择 Public（公开仓库）</span><br>
+                    • 不要勾选 "Add a README"<br>
+                    • 不要勾选 "Add .gitignore"<br>
+                    • 不要勾选 "Choose a license"
+                </div>
+                <p style="margin-top: 15px;"><strong>2. 点击 "Create repository"</strong></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">2</span>推送代码到GitHub</h2>
+            <div class="step-content">
+                <p>创建仓库后，GitHub会显示推送命令。在终端执行：</p>
+                <div class="commands">
+cd /Users/williamjoy/Desktop/AI/QuantTrading/QuantTrading/Personal/Health
+
+# 添加远程仓库（替换YOUR_USERNAME为您的GitHub用户名）
+git remote add origin https://github.com/YOUR_USERNAME/jinming-health-dashboard.git
+
+# 推送代码
+git branch -M main
+git push -u origin main
+                </div>
+                <div class="info-box">
+                    <strong>💡 提示：</strong>如果提示输入密码，请使用GitHub Personal Access Token<br>
+                    获取地址：https://github.com/settings/tokens
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">3</span>连接Netlify</h2>
+            <div class="step-content">
+                <ol>
+                    <li>点击下方按钮打开Netlify：</li                </ol>
+                <a href="https://app.netlify.com/start" target="_blank" class="button">🌐 连接Netlify</a>
+                <ol start="2">
+                    <li style="margin-top: 15px;">选择 "Deploy from Git repository"</li>
+                    <li>选择 "GitHub" 并授权</li>
+                    <li>选择 <code>jinming-health-dashboard</code> 仓库</li>
+                    <li>构建设置保持默认（留空）</li>
+                    <li>点击 "Deploy Site"</li>
+                </ol>
+                <div class="success-box">
+                    <strong>✅ 等待1-2分钟，网站将自动发布！</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">4</span>设置自定义域名</h2>
+            <div class="step-content">
+                <p>Netlify会自动生成域名（如 random-name.netlify.app），修改为更好记的：</p>
+                <ol>
+                    <li>在Netlify后台点击 "Site settings"</li>
+                    <li>点击 "Change site name"</li>
+                    <li>输入：<code>williamjoy-health</code></li>
+                    <li>新域名：<strong>https://williamjoy-health.netlify.app</strong></li>
+                </ol>
+                <div class="info-box">
+                    <strong>其他可选域名：</strong><br>
+                    • jinming-health.netlify.app<br>
+                    • williamjoy-freediving.netlify.app<br>
+                    • jinming-dashboard.netlify.app
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-number">5</span>配置自动更新密钥</h2>
+            <div class="step-content">
+                <p>为了使每天11点自动更新工作，需要配置Oura API Token：</p>
+                <ol>
+                    <li><strong>获取Oura API Token：</strong><br>
+                    <a href="https://cloud.ouraring.com/personal-access-tokens" target="_blank" class="button button-small">🔑 获取Oura Token</a></li>
+                    <li style="margin-top: 15px;"><strong>在GitHub中设置Secret：</strong><br>
+                    • 打开您的GitHub仓库<br>
+                    • 点击 Settings → Secrets and variables → Actions<br>
+                    • 点击 "New repository secret"<br>
+                    • Name: <code>OURA_ACCESS_TOKEN</code><br>
+                    • Secret: 粘贴您的Oura Token<br>
+                    • 点击 "Add secret"</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section-title">🎉 部署完成！</div>
+
+        <div class="step">
+            <h2>✅ 验证清单</h2>
+            <ul class="checklist">
+                <li>GitHub仓库已创建（Public）</li>
+                <li>代码已推送到GitHub</li>
+                <li>Netlify已连接并部署成功</li>
+                <li>网站可以访问：https://williamjoy-health.netlify.app</li>
+                <li>Oura API Token已配置</li>
+                <li>所有页面显示正常</li>
+                <li>8个图表正确加载</li>
+                <li>训练日志输入功能正常</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>⏰ 每天11点自动更新</h2>
+            <div class="step-content">
+                <div class="success-box">
+                    <strong>✅ 已配置GitHub Actions自动更新</strong><br><br>
+                    工作流程：<br>
+                    • 每天11:00（北京时间）自动运行<br>
+                    • 获取Oura Ring最新数据<br>
+                    • 生成新的HTML报告和图表<br>
+                    • 自动提交到GitHub<br>
+                    • Netlify自动部署（1-2分钟）<br><br>
+                    <strong>无需手动操作，网站始终保持最新数据！</strong>
+                </div>
+                <p style="margin-top: 15px;"><strong>手动更新（备用）：</strong></p>
+                <div class="commands">
+cd Personal/Health
+python3 ultimate_dashboard.py
+git add .
+git commit -m "Manual update: $(date +'%Y-%m-%d')"
+git push
+                </div>
+            </div>
+        </div>
+
+        <div class="final-message">
+            <h2>🎉 准备开始部署！</h2>
+            <p style="font-size: 1.2em; margin-bottom: 20px;">点击下方按钮开始第1步：创建GitHub仓库</p>
+            <a href="https://github.com/new" target="_blank" class="button" style="font-size: 1.3em; padding: 20px 40px;">📂 开始部署</a>
+            <p style="margin-top: 20px;">预计完成时间：15分钟</p>
+        </div>
+
+        <div class="step">
+            <h2>📞 需要帮助？</h2>
+            <div class="step-content">
+                <p><strong>参考文档：</strong></p>
+                <ul>
+                    <li><a href="DEPLOYMENT_GUIDE.md" style="color: #667eea;">DEPLOYMENT_GUIDE.md</a> - 完整部署指南</li>
+                    <li><a href="DEPLOYMENT_QUICK_START.md" style="color: #667eea;">DEPLOYMENT_QUICK_START.md</a> - 10分钟快速部署</li>
+                    <li><a href="README.md" style="color: #667eea;">README.md</a> - 使用说明</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>在线支持：</strong></p>
+                <ul>
+                    <li>Netlify文档：https://docs.netlify.com/</li>
+                    <li>GitHub Actions文档：https://docs.github.com/en/actions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自动滚动到第一个步骤
+        window.onload = function() {
+            console.log('部署指南已加载');
+            console.log('当前状态：Git仓库已初始化，等待部署...');
+        };
+    </script>
+</body>
+</html>

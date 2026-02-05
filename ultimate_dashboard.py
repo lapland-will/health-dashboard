@@ -50,6 +50,12 @@ try:
 except ImportError:
     EnhancedVisualizer = None
 
+# 导入有道云笔记读取器
+try:
+    from youdao_note_reader import YoudaoNoteReader
+except ImportError:
+    YoudaoNoteReader = None
+
 # Oura API 配置
 OURA_ACCESS_TOKEN = "DUC6D3LWLLNOWXK6IBNVEFS7IH445TIV"
 OURA_BASE_URL = "https://api.ouraring.com/v2"
@@ -281,6 +287,22 @@ class UltimateHealthDashboard:
 
         # 3. 获取空气质量（多源平均）
         self.get_aqi_multi_source()
+
+        # 3.5. 读取有道云笔记中的训练日志
+        yd_training_logs = []
+        if YoudaoNoteReader:
+            print("\n📖 读取有道云笔记训练日志...")
+            try:
+                yd_reader = YoudaoNoteReader()
+                yd_training_logs = yd_reader.read_yesterday_training_log()
+                if yd_training_logs:
+                    yd_reader.print_summary(yd_training_logs)
+                    yd_reader.save_to_training_log_system(yd_training_logs)
+                    print(f"✅ 有道云笔记：找到 {len(yd_training_logs)} 条训练记录")
+                else:
+                    print("ℹ️ 有道云笔记：未找到昨天的训练记录")
+            except Exception as e:
+                print(f"⚠️ 有道云笔记读取失败: {e}")
 
         # 4. 搜索训练笔记
         training_notes = self.search_training_notes()
