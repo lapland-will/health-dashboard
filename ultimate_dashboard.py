@@ -336,6 +336,10 @@ class UltimateHealthDashboard:
             print("\n📊 生成增强可视化图表（7天、30天趋势）...")
             self.enhanced_visualizer.generate_all_charts()
 
+        # 10. 生成最新数据JSON（供index.html动态加载）
+        print("\n📊 生成最新数据JSON...")
+        self.generate_latest_data_json()
+
         print("\n✓ 终极看板生成完成！")
 
     def get_eightsleep_data(self):
@@ -676,6 +680,37 @@ class UltimateHealthDashboard:
                 "note": "历史平均值（API暂时不可用）"
             }
             return True
+
+    def generate_latest_data_json(self):
+        """生成最新的数据JSON文件，供index.html动态加载"""
+        import json
+
+        latest_data = {
+            "date": self.today_str,
+            "update_time": self.today.strftime("%Y-%m-%d %H:%M:%S"),
+            "readiness": {
+                "score": self.health_data.get("readiness", {}).get("score", 0),
+                "contributors": self.health_data.get("readiness", {}).get("contributors", {})
+            },
+            "sleep": {
+                "score": self.health_data.get("sleep", {}).get("score", 0),
+                "contributors": self.health_data.get("sleep", {}).get("contributors", {})
+            },
+            "activity": {
+                "score": self.health_data.get("activity", {}).get("score", 0),
+                "contributors": self.health_data.get("activity", {}).get("contributors", {})
+            }
+        }
+
+        # 保存为JSON文件
+        output_file = self.dashboard_dir / "latest_data.json"
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(latest_data, f, ensure_ascii=False, indent=2)
+
+        print(f"✅ 最新数据JSON已生成: {output_file}")
+        print(f"   - 准备度: {latest_data['readiness']['score']}/100")
+        print(f"   - 睡眠: {latest_data['sleep']['score']}/100")
+        print(f"   - 活动: {latest_data['activity']['score']}/100")
 
     def generate_complete_report(self, training_notes, training_insights, detailed_analysis=None):
         """生成完整报告"""

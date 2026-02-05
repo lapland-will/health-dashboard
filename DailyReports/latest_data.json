@@ -1,0 +1,41 @@
+{
+  "date": "2026-02-05",
+  "update_time": "2026-02-05 13:12:09",
+  "readiness": {
+    "score": 89,
+    "contributors": {
+      "activity_balance": 74,
+      "body_temperature": 90,
+      "hrv_balance": 82,
+      "previous_day_activity": 79,
+      "previous_night": 90,
+      "recovery_index": 91,
+      "resting_heart_rate": 100,
+      "sleep_balance": 100,
+      "sleep_regularity": 89
+    }
+  },
+  "sleep": {
+    "score": 82,
+    "contributors": {
+      "deep_sleep": 96,
+      "efficiency": 98,
+      "latency": 64,
+      "rem_sleep": 97,
+      "restfulness": 79,
+      "timing": 19,
+      "total_sleep": 92
+    }
+  },
+  "activity": {
+    "score": 97,
+    "contributors": {
+      "meet_daily_targets": 95,
+      "move_every_hour": 100,
+      "recovery_time": 100,
+      "stay_active": 90,
+      "training_frequency": 100,
+      "training_volume": 100
+    }
+  }
+}

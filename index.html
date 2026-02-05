@@ -1540,7 +1540,59 @@
         window.addEventListener('DOMContentLoaded', function() {
             initDateSelector();
             updateDateDisplay();
+
+            // 🔥 加载最新的Oura数据（替换硬编码数据）
+            loadLatestOuraData();
         });
+
+        // ==================== 加载最新Oura数据 ====================
+
+        async function loadLatestOuraData() {
+            try {
+                console.log('📊 正在加载最新Oura数据...');
+
+                const response = await fetch('DailyReports/latest_data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ 最新数据加载成功:', data);
+
+                // 更新准备度分数
+                if (data.readiness && data.readiness.score !== undefined) {
+                    const readinessEl = document.querySelector('.stat-card:nth-child(1) .stat-value');
+                    if (readinessEl) {
+                        readinessEl.textContent = data.readiness.score;
+                        console.log(`✅ 准备度分数已更新: ${data.readiness.score}`);
+                    }
+                }
+
+                // 更新睡眠分数
+                if (data.sleep && data.sleep.score !== undefined) {
+                    const sleepEl = document.querySelector('.stat-card:nth-child(2) .stat-value');
+                    if (sleepEl) {
+                        sleepEl.textContent = data.sleep.score;
+                        console.log(`✅ 睡眠分数已更新: ${data.sleep.score}`);
+                    }
+                }
+
+                // 更新活动分数
+                if (data.activity && data.activity.score !== undefined) {
+                    const activityEl = document.querySelector('.stat-card:nth-child(3) .stat-value');
+                    if (activityEl) {
+                        activityEl.textContent = data.activity.score;
+                        console.log(`✅ 活动分数已更新: ${data.activity.score}`);
+                    }
+                }
+
+                console.log('✅ 所有Oura数据已更新完成');
+
+            } catch (error) {
+                console.error('❌ 加载最新Oura数据失败:', error);
+                console.error('请确保ultimate_dashboard.py已运行并生成latest_data.json');
+            }
+        }
     </script>
 </body>
 </html>
