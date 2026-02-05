@@ -56,6 +56,126 @@
             font-weight: bold;
         }
 
+        /* 日期选择器样式 */
+        .date-selector {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-selector-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .date-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .date-btn:active {
+            transform: translateY(0);
+        }
+
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-input {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .current-date-display {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comparison-section {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .comparison-title {
+            font-size: 1.1em;
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .comparison-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .comparison-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .comparison-change {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .comparison-change.positive {
+            color: #4caf50;
+        }
+
+        .comparison-change.negative {
+            color: #f44336;
+        }
+
+        .comparison-change.neutral {
+            color: #9e9e9e;
+        }
+
         .section {
             background: white;
             border-radius: 20px;
@@ -359,6 +479,51 @@
             <p class="subtitle">自由潜水世界纪录保持者 | 每日健康追踪与训练建议</p>
             <div class="update-info">
                 📅 2026年2月4日 | 🔄 下次更新: <span class="countdown" id="countdown">3:00:00</span>
+            </div>
+
+            <!-- 日期选择器 -->
+            <div class="date-selector">
+                <div class="current-date-display" id="currentDateDisplay">📅 当前查看：今天 (2026-02-05)</div>
+
+                <div class="date-selector-controls">
+                    <button class="date-btn" onclick="changeDate(-7)">◀ 前一周</button>
+                    <button class="date-btn" onclick="changeDate(-1)">◀ 昨天</button>
+                    <button class="date-btn" onclick="changeDate(0)">今天</button>
+                    <button class="date-btn" onclick="changeDate(1)">明天 ▶</button>
+                    <button class="date-btn" onclick="changeDate(7)">后一周 ▶</button>
+
+                    <div class="date-input-group">
+                        <label for="datePicker">选择日期：</label>
+                        <input type="date" id="datePicker" class="date-input" onchange="selectDate(this.value)">
+                    </div>
+                </div>
+
+                <!-- 历史数据对比 -->
+                <div class="comparison-section" id="comparisonSection">
+                    <div class="comparison-title">📊 与昨天对比</div>
+                    <div class="comparison-grid" id="comparisonGrid">
+                        <div class="comparison-item">
+                            <div class="comparison-label">身体准备度</div>
+                            <div class="comparison-value" id="compareReadiness">--</div>
+                            <div class="comparison-change" id="compareReadinessChange">--</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">睡眠质量</div>
+                            <div class="comparison-value" id="compareSleep">--</div>
+                            <div class="comparison-change" id="compareSleepChange">--</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">活动水平</div>
+                            <div class="comparison-value" id="compareActivity">--</div>
+                            <div class="comparison-change" id="compareActivityChange">--</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">静息心率</div>
+                            <div class="comparison-value" id="compareHR">--</div>
+                            <div class="comparison-change" id="compareHRChange">--</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1144,6 +1309,238 @@
         console.log('🏊 金明健康看板 - 首页');
         console.log('自动刷新: 每3小时');
         console.log('最后更新:', new Date().toLocaleString('zh-CN'));
+
+        // ==================== 日期选择器功能 ====================
+
+        // 当前选中的日期
+        let currentDate = new Date();
+        let selectedDate = new Date();
+
+        // 历史数据存储（实际应用中应从API或本地文件读取）
+        const historicalData = {};
+
+        // 初始化日期选择器
+        function initDateSelector() {
+            const datePicker = document.getElementById('datePicker');
+
+            // 设置日期选择器的最大值为今天
+            const today = new Date();
+            const maxDate = today.toISOString().split('T')[0];
+            datePicker.max = maxDate;
+
+            // 设置默认值为今天
+            datePicker.value = maxDate;
+
+            // 加载今天的数据
+            loadHistoricalData(maxDate);
+        }
+
+        // 改变日期（相对天数）
+        function changeDate(deltaDays) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(currentDate.getDate() + deltaDays);
+
+            // 不允许选择未来的日期
+            const today = new Date();
+            if (newDate > today) {
+                alert('⚠️ 不能查看未来的数据');
+                return;
+            }
+
+            currentDate = newDate;
+            const dateString = currentDate.toISOString().split('T')[0];
+
+            // 更新日期选择器
+            document.getElementById('datePicker').value = dateString;
+
+            // 更新显示
+            updateDateDisplay();
+
+            // 加载历史数据
+            loadHistoricalData(dateString);
+        }
+
+        // 选择具体日期
+        function selectDate(dateString) {
+            if (!dateString) return;
+
+            const newDate = new Date(dateString);
+
+            // 不允许选择未来的日期
+            const today = new Date();
+            if (newDate > today) {
+                alert('⚠️ 不能查看未来的数据');
+                document.getElementById('datePicker').value = currentDate.toISOString().split('T')[0];
+                return;
+            }
+
+            currentDate = newDate;
+
+            // 更新显示
+            updateDateDisplay();
+
+            // 加载历史数据
+            loadHistoricalData(dateString);
+        }
+
+        // 更新日期显示
+        function updateDateDisplay() {
+            const display = document.getElementById('currentDateDisplay');
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+
+            let dateLabel = currentDate.toISOString().split('T')[0];
+
+            // 添加友好的日期标签
+            if (currentDate.toDateString() === today.toDateString()) {
+                dateLabel = `今天 (${dateLabel})`;
+            } else if (currentDate.toDateString() === yesterday.toDateString()) {
+                dateLabel = `昨天 (${dateLabel})`;
+            }
+
+            display.textContent = `📅 当前查看：${dateLabel}`;
+
+            // 更新对比标题
+            updateComparisonTitle();
+        }
+
+        // 更新对比标题
+        function updateComparisonTitle() {
+            const title = document.querySelector('.comparison-title');
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+
+            if (currentDate.toDateString() === today.toDateString()) {
+                title.textContent = '📊 与昨天对比';
+            } else if (currentDate.toDateString() === yesterday.toDateString()) {
+                title.textContent = '📊 与前天对比';
+            } else {
+                const prevDay = new Date(currentDate);
+                prevDay.setDate(currentDate.getDate() - 1);
+                title.textContent = `📊 与 ${prevDay.toISOString().split('T')[0]} 对比`;
+            }
+        }
+
+        // 加载历史数据（模拟数据，实际应从API读取）
+        function loadHistoricalData(dateString) {
+            console.log(`📅 加载 ${dateString} 的数据...`);
+
+            // 实际应用中，这里应该：
+            // 1. 调用API获取指定日期的数据
+            // 2. 或从本地存储读取历史数据
+            // 3. 或从DailyReports文件夹读取对应日期的报告
+
+            // 模拟数据加载
+            const mockData = generateMockData(dateString);
+            updateDisplayWithHistoricalData(mockData);
+
+            // 加载对比数据
+            const prevDate = new Date(dateString);
+            prevDate.setDate(prevDate.getDate() - 1);
+            const prevDateString = prevDate.toISOString().split('T')[0];
+
+            const mockPrevData = generateMockData(prevDateString);
+            updateComparison(mockData, mockPrevData);
+        }
+
+        // 生成模拟数据（实际应用中应删除此函数）
+        function generateMockData(dateString) {
+            // 基于日期生成一致的随机数据
+            const dateNum = parseInt(dateString.replace(/-/g, ''));
+            const random = (seed) => {
+                const x = Math.sin(seed) * 10000;
+                return x - Math.floor(x);
+            };
+
+            return {
+                date: dateString,
+                readiness: Math.floor(random(dateNum) * 30 + 70), // 70-100
+                sleep: Math.floor(random(dateNum + 1) * 30 + 60), // 60-90
+                activity: Math.floor(random(dateNum + 2) * 30 + 70), // 70-100
+                restingHR: Math.floor(random(dateNum + 3) * 20 + 50), // 50-70
+                hrv: Math.floor(random(dateNum + 4) * 50 + 30), // 30-80
+                recovery: Math.floor(random(dateNum + 5) * 40 + 50), // 50-90
+                steps: Math.floor(random(dateNum + 6) * 10000 + 5000) // 5000-15000
+            };
+        }
+
+        // 使用历史数据更新显示
+        function updateDisplayWithHistoricalData(data) {
+            console.log('📊 更新显示:', data);
+
+            // 更新关键指标卡片
+            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = data.readiness;
+            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = data.sleep;
+            document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = data.activity;
+
+            // 注意：实际应用中还需要更新所有其他section的内容
+            // 这里只是示例，完整实现需要重新加载整个页面的数据
+        }
+
+        // 更新对比数据
+        function updateComparison(currentData, prevData) {
+            // 身体准备度对比
+            updateComparisonItem('compareReadiness', 'compareReadinessChange',
+                currentData.readiness, prevData.readiness);
+
+            // 睡眠质量对比
+            updateComparisonItem('compareSleep', 'compareSleepChange',
+                currentData.sleep, prevData.sleep);
+
+            // 活动水平对比
+            updateComparisonItem('compareActivity', 'compareActivityChange',
+                currentData.activity, prevData.activity);
+
+            // 静息心率对比（注意：心率越低越好）
+            updateComparisonItem('compareHR', 'compareHRChange',
+                currentData.restingHR, prevData.restingHR, true);
+        }
+
+        // 更新单个对比项
+        function updateComparisonItem(valueId, changeId, current, previous, lowerIsBetter = false) {
+            const valueEl = document.getElementById(valueId);
+            const changeEl = document.getElementById(changeId);
+
+            valueEl.textContent = current;
+
+            const diff = current - previous;
+            const percentChange = previous !== 0 ? ((diff / previous) * 100).toFixed(1) : 0;
+
+            let changeText = '';
+            let changeClass = '';
+
+            if (diff > 0) {
+                if (lowerIsBetter) {
+                    changeText = `↑ +${diff} (+${percentChange}%) ⚠️`;
+                    changeClass = 'negative';
+                } else {
+                    changeText = `↑ +${diff} (+${percentChange}%) ✅`;
+                    changeClass = 'positive';
+                }
+            } else if (diff < 0) {
+                if (lowerIsBetter) {
+                    changeText = `↓ ${diff} (${percentChange}%) ✅`;
+                    changeClass = 'positive';
+                } else {
+                    changeText = `↓ ${diff} (${percentChange}%) ⚠️`;
+                    changeClass = 'negative';
+                }
+            } else {
+                changeText = '→ 持平';
+                changeClass = 'neutral';
+            }
+
+            changeEl.textContent = changeText;
+            changeEl.className = 'comparison-change ' + changeClass;
+        }
+
+        // 页面加载时初始化日期选择器
+        window.addEventListener('DOMContentLoaded', function() {
+            initDateSelector();
+            updateDateDisplay();
+        });
     </script>
 </body>
 </html>
