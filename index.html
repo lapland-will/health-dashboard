@@ -1331,8 +1331,9 @@
             // 设置默认值为今天
             datePicker.value = maxDate;
 
-            // 加载今天的数据
-            loadHistoricalData(maxDate);
+            // 🔥 重要：今天的数据已在loadLatestOuraData()中加载，不要用模拟数据覆盖
+            // 只有切换到历史日期时才使用模拟数据
+            // loadHistoricalData(maxDate); // 注释掉，防止模拟数据覆盖真实数据
         }
 
         // 改变日期（相对天数）
@@ -1356,8 +1357,14 @@
             // 更新显示
             updateDateDisplay();
 
-            // 加载历史数据
-            loadHistoricalData(dateString);
+            // 🔥 判断是否是今天
+            if (currentDate.toDateString() === today.toDateString()) {
+                // 如果是今天，重新加载真实数据（不要用模拟数据）
+                loadLatestOuraData();
+            } else {
+                // 如果是历史日期，使用模拟数据
+                loadHistoricalData(dateString);
+            }
         }
 
         // 选择具体日期
@@ -1365,9 +1372,9 @@
             if (!dateString) return;
 
             const newDate = new Date(dateString);
+            const today = new Date();
 
             // 不允许选择未来的日期
-            const today = new Date();
             if (newDate > today) {
                 alert('⚠️ 不能查看未来的数据');
                 document.getElementById('datePicker').value = currentDate.toISOString().split('T')[0];
@@ -1379,8 +1386,14 @@
             // 更新显示
             updateDateDisplay();
 
-            // 加载历史数据
-            loadHistoricalData(dateString);
+            // 🔥 判断是否是今天
+            if (newDate.toDateString() === today.toDateString()) {
+                // 如果是今天，重新加载真实数据（不要用模拟数据）
+                loadLatestOuraData();
+            } else {
+                // 如果是历史日期，使用模拟数据
+                loadHistoricalData(dateString);
+            }
         }
 
         // 更新日期显示
