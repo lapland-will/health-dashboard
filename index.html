@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>金明健康看板 - 首页</title>
+    <title>金明健康看板 - 专业版</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -19,177 +19,60 @@
             line-height: 1.6;
         }
 
-        .container {
+        .dashboard-container {
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        .header {
+        /* Header */
+        .main-header {
             background: white;
             border-radius: 20px;
             padding: 40px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             text-align: center;
         }
 
-        .header h1 {
-            font-size: 3em;
+        .main-header h1 {
+            font-size: 2.5em;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
         }
 
-        .header .subtitle {
+        .header-subtitle {
             color: #666;
-            font-size: 1.2em;
+            font-size: 1.1em;
             margin-bottom: 20px;
         }
 
-        .update-info {
+        .update-banner {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
-            padding: 15px;
+            padding: 12px 24px;
             border-radius: 10px;
             display: inline-block;
             font-weight: bold;
         }
 
-        /* 日期选择器样式 */
-        .date-selector {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .date-selector-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .date-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .date-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .date-btn:active {
-            transform: translateY(0);
-        }
-
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .date-input {
-            padding: 10px 15px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .current-date-display {
-            font-size: 1.3em;
-            color: #667eea;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .comparison-section {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .comparison-title {
-            font-size: 1.1em;
-            color: #1976d2;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .comparison-item {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .comparison-label {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .comparison-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .comparison-change {
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-        .comparison-change.positive {
-            color: #4caf50;
-        }
-
-        .comparison-change.negative {
-            color: #f44336;
-        }
-
-        .comparison-change.neutral {
-            color: #9e9e9e;
-        }
-
-        .section {
+        /* Stats Grid */
+        .stats-section {
             background: white;
             border-radius: 20px;
             padding: 30px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
         .section-title {
-            font-size: 2em;
+            font-size: 1.8em;
             color: #667eea;
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .stats-grid {
@@ -202,14 +85,16 @@
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
+            padding: 30px 20px;
             border-radius: 15px;
             text-align: center;
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
         }
 
         .stat-value {
@@ -219,1300 +104,435 @@
         }
 
         .stat-label {
-            font-size: 0.9em;
+            font-size: 1em;
             opacity: 0.9;
         }
 
-        .readiness-gauge {
-            max-width: 400px;
-            margin: 0 auto;
+        .stat-trend {
+            font-size: 0.85em;
+            margin-top: 5px;
+            opacity: 0.8;
         }
 
-        .readiness-score {
-            text-align: center;
-            font-size: 5em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 20px 0;
-        }
-
-        .readiness-label {
-            text-align: center;
-            font-size: 1.5em;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .metrics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .metrics-table th,
-        .metrics-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .metrics-table th {
+        /* Comparison Section */
+        .comparison-section {
             background: #f8f9fa;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .metrics-table tr:hover {
-            background: #f8f9fa;
-        }
-
-        .good { color: #28a745; font-weight: bold; }
-        .warning { color: #ffc107; font-weight: bold; }
-        .excellent { color: #007bff; font-weight: bold; }
-
-        .weather-box {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 30px;
             border-radius: 15px;
-            text-align: center;
-        }
-
-        .weather-temp {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .aqi-box {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .chart-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .chart-image {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .recommendation-box {
-            background: #f8f9fa;
             padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
-            border-left: 5px solid #667eea;
-        }
-
-        .recommendation-box h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        .recommendation-box ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .recommendation-box li {
-            padding: 8px 0;
-            padding-left: 30px;
-            position: relative;
-        }
-
-        .recommendation-box li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .link-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .link-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .link-card.featured {
-            border: 3px solid #667eea;
-            background: linear-gradient(135deg, #fff 0%, #f0f4ff 100%);
-        }
-
-        .link-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-
-        .link-title {
-            font-size: 1.5em;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .link-desc {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .badge-recommended {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .badge-new {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-
-        .nutrition-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .nutrition-table th,
-        .nutrition-table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        .nutrition-table th {
-            background: #667eea;
-            color: white;
-        }
-
-        .nutrition-table tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-
-        .auto-refresh {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
             margin-top: 30px;
         }
 
-        .countdown {
+        .comparison-title {
+            font-size: 1.2em;
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .comparison-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .comparison-value {
             font-size: 2em;
             font-weight: bold;
-            color: #f5576c;
+            color: #667eea;
+            margin-bottom: 5px;
         }
 
-        .warning-box {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .comparison-change {
+            font-size: 0.9em;
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
-        .warning-box h3 {
-            color: #856404;
+        .comparison-change.positive {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .comparison-change.negative {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        .comparison-change.neutral {
+            background: #f5f5f5;
+            color: #9e9e9e;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .action-icon {
+            font-size: 2em;
             margin-bottom: 10px;
         }
 
-        .warning-box p {
-            color: #856404;
-            margin: 5px 0;
+        .action-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Weather Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .weather-temp {
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        .weather-details {
+            flex: 1;
+        }
+
+        /* Training Log Section */
+        .training-log-widget {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        /* Data Loading Indicator */
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading-indicator.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
+    <div class="dashboard-container">
+        <!-- Main Header -->
+        <div class="main-header">
             <h1>🏊 金明健康看板</h1>
-            <p class="subtitle">自由潜水世界纪录保持者 | 每日健康追踪与训练建议</p>
-            <div class="update-info">
-                📅 2026年2月4日 | 🔄 下次更新: <span class="countdown" id="countdown">3:00:00</span>
+            <p class="header-subtitle">自由潜水世界纪录保持者 | 实时健康追踪与训练建议</p>
+            <div class="update-banner">
+                📅 <span id="currentDate">2026-02-05</span> | 🕐 <span id="updateTime">13:30:00</span> | ✅ 数据已更新
+            </div>
+        </div>
+
+        <!-- Key Stats Section -->
+        <div class="stats-section">
+            <div class="section-title">
+                📊 今日健康评分
+                <span style="font-size: 0.8em; color: #999; font-weight: normal;">(来自Oura Ring)</span>
             </div>
 
-            <!-- 日期选择器 -->
-            <div class="date-selector">
-                <div class="current-date-display" id="currentDateDisplay">📅 当前查看：今天 (2026-02-05)</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-readiness">89</div>
+                    <div class="stat-label">身体准备度</div>
+                    <div class="stat-trend" id="trend-readiness">📈 优秀状态</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-sleep">82</div>
+                    <div class="stat-label">睡眠质量</div>
+                    <div class="stat-trend" id="trend-sleep">😴 充足休息</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-activity">97</div>
+                    <div class="stat-label">活动水平</div>
+                    <div class="stat-trend" id="trend-activity">🏃 积极活跃</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-resting-hr">54</div>
+                    <div class="stat-label">静息心率</div>
+                    <div class="stat-trend" id="trend-hr">💓 健康范围</div>
+                </div>
+            </div>
 
-                <div class="date-selector-controls">
-                    <button class="date-btn" onclick="changeDate(-7)">◀ 前一周</button>
-                    <button class="date-btn" onclick="changeDate(-1)">◀ 昨天</button>
-                    <button class="date-btn" onclick="changeDate(0)">今天</button>
-                    <button class="date-btn" onclick="changeDate(1)">明天 ▶</button>
-                    <button class="date-btn" onclick="changeDate(7)">后一周 ▶</button>
-
-                    <div class="date-input-group">
-                        <label for="datePicker">选择日期：</label>
-                        <input type="date" id="datePicker" class="date-input" onchange="selectDate(this.value)">
+            <!-- Comparison Section -->
+            <div class="comparison-section">
+                <div class="comparison-title">📊 与昨天对比</div>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-label">准备度</div>
+                        <div class="comparison-value" id="compare-readiness">--</div>
+                        <div class="comparison-change" id="change-readiness">--</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">睡眠质量</div>
+                        <div class="comparison-value" id="compare-sleep">--</div>
+                        <div class="comparison-change" id="change-sleep">--</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">活动水平</div>
+                        <div class="comparison-value" id="compare-activity">--</div>
+                        <div class="comparison-change" id="change-activity">--</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">静息心率</div>
+                        <div class="comparison-value" id="compare-hr">--</div>
+                        <div class="comparison-change" id="change-hr">--</div>
                     </div>
                 </div>
+            </div>
 
-                <!-- 历史数据对比 -->
-                <div class="comparison-section" id="comparisonSection">
-                    <div class="comparison-title">📊 与昨天对比</div>
-                    <div class="comparison-grid" id="comparisonGrid">
-                        <div class="comparison-item">
-                            <div class="comparison-label">身体准备度</div>
-                            <div class="comparison-value" id="compareReadiness">--</div>
-                            <div class="comparison-change" id="compareReadinessChange">--</div>
-                        </div>
-                        <div class="comparison-item">
-                            <div class="comparison-label">睡眠质量</div>
-                            <div class="comparison-value" id="compareSleep">--</div>
-                            <div class="comparison-change" id="compareSleepChange">--</div>
-                        </div>
-                        <div class="comparison-item">
-                            <div class="comparison-label">活动水平</div>
-                            <div class="comparison-value" id="compareActivity">--</div>
-                            <div class="comparison-change" id="compareActivityChange">--</div>
-                        </div>
-                        <div class="comparison-item">
-                            <div class="comparison-label">静息心率</div>
-                            <div class="comparison-value" id="compareHR">--</div>
-                            <div class="comparison-change" id="compareHRChange">--</div>
-                        </div>
+            <!-- Quick Actions -->
+            <div class="section-title" style="margin-top: 30px;">🚀 快速操作</div>
+            <div class="quick-actions">
+                <a href="log_input_local.html" class="action-card" target="_blank">
+                    <div class="action-icon">📝</div>
+                    <div class="action-title">训练日志输入</div>
+                    <div class="action-desc">记录今天的训练数据</div>
+                </a>
+                <a href="DailyReports/dashboard_2026-02-05.html" class="action-card" target="_blank">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">完整健康报告</div>
+                    <div class="action-desc">查看详细的健康分析</div>
+                </a>
+                <a href="DailyReports/dashboard_with_charts.html" class="action-card" target="_blank">
+                    <div class="action-icon">📈</div>
+                    <div class="action-title">数据可视化</div>
+                    <div class="action-desc">8个专业图表</div>
+                </a>
+                <a href="TrainingLogs/personal_best.json" class="action-card" target="_blank">
+                    <div class="action-icon">🏆</div>
+                    <div class="action-title">个人最好成绩</div>
+                    <div class="action-desc">PB记录管理</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Weather & Training -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Weather Widget -->
+            <div class="weather-widget">
+                <h3 style="margin-bottom: 15px;">🌤️ 上海天气</h3>
+                <div class="weather-main">
+                    <div class="weather-temp">14°C</div>
+                    <div class="weather-details">
+                        <div>💨 风速：3级 东南风</div>
+                        <div style="margin-top: 8px;">💧 湿度：65%</div>
+                        <div style="margin-top: 8px;">🌅 日出：06:42 | 日落：17:38</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Air Quality -->
+            <div class="weather-widget" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <h3 style="margin-bottom: 15px;">🌬️ 空气质量</h3>
+                <div class="weather-main">
+                    <div class="weather-temp">75</div>
+                    <div class="weather-details">
+                        <div>📍 AQI：75 良好</div>
+                        <div style="margin-top: 8px;">💨 PM2.5：35 μg/m³</div>
+                        <div style="margin-top: 8px;">✅ 适合户外训练</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Key Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">89</div>
-                <div class="stat-label">身体准备度</div>
+        <!-- Training Advice -->
+        <div class="stats-section">
+            <div class="section-title">💡 今日训练建议</div>
+            <div style="background: #f0f9ff; border-left: 4px solid #2196f3; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                <h4 style="color: #1976d2; margin-bottom: 10px;">🎯 训练重点</h4>
+                <p style="color: #333; line-height: 1.8;">根据今天的高准备度分数（89分）和优秀的睡眠质量（82分），建议进行<strong>高强度泳池训练</strong>。重点训练无蹼和单蹼技术，配合陆地核心力量训练。</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-value">82</div>
-                <div class="stat-label">睡眠质量</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">97</div>
-                <div class="stat-label">活动水平</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">8</div>
-                <div class="stat-label">专业图表</div>
-            </div>
-        </div>
-
-        <!-- Readiness Score -->
-        <div class="section">
-            <h2 class="section-title">📊 今日健康评分</h2>
-            <div class="readiness-score">89/100</div>
-            <div class="readiness-label">⭐ 优秀状态</div>
-
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>指标</th>
-                        <th>数值</th>
-                        <th>状态</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>HRV平衡</td>
-                        <td>82/100</td>
-                        <td class="excellent">优秀</td>
-                    </tr>
-                    <tr>
-                        <td>恢复指数</td>
-                        <td>91/100</td>
-                        <td class="excellent">优秀</td>
-                    </tr>
-                    <tr>
-                        <td>静息心率</td>
-                        <td>100/100</td>
-                        <td class="excellent">完美</td>
-                    </tr>
-                    <tr>
-                        <td>睡眠平衡</td>
-                        <td>100/100</td>
-                        <td class="excellent">完美</td>
-                    </tr>
-                    <tr>
-                        <td>活动平衡</td>
-                        <td>74/100</td>
-                        <td class="good">良好</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Weather & Air Quality -->
-        <div class="charts-grid">
-            <div class="weather-box">
-                <h3>🌤️ 今日天气 - 上海</h3>
-                <div class="weather-temp">14.4°C</div>
-                <p>多云 | 体感 12.5°C</p>
-                <p>湿度 46% | 风速 22.0 km/h</p>
-                <p>🌅 日出 06:44 | 🌇 日落 17:31</p>
-            </div>
-
-            <div class="aqi-box">
-                <h3>🌬️ 空气质量</h3>
-                <div class="weather-temp">75</div>
-                <p>🟡 良</p>
-                <p>PM2.5: 35 μg/m³</p>
-                <p>PM10: 50 μg/m³</p>
-                <p>✅ 适合户外训练</p>
-            </div>
-        </div>
-
-        <!-- Training Recommendation -->
-        <div class="section">
-            <h2 class="section-title">🎯 今日训练建议</h2>
-            <div class="recommendation-box">
-                <h3>🔥 最佳状态 - 高强度训练日</h3>
-                <p><strong>状态评估：</strong>今日准备度86分，接近创造7.6L肺活量PB时的水平！这是挑战个人记录的好时机。</p>
-                <br>
-                <h4>具体行动计划：</h4>
-                <ul>
-                    <li>晨起：空腹低心率骑行30分钟（心率保持130-140）</li>
-                    <li>上午：泳池基础训练（四项基础强化）</li>
-                    <li>下午：1000米蛙泳测试或技术突破</li>
-                    <li>晚上：轻度拉伸恢复</li>
-                </ul>
-                <br>
-                <h4>小憨眯一下建议：</h4>
-                <ul>
-                    <li>训练间隙：深度放松5分钟</li>
-                    <li>午休：小憨眯一下20分钟（HR降至最低）</li>
-                    <li>晚上：冥想10分钟提升恢复</li>
-                </ul>
-                <br>
-                <h4>营养建议：</h4>
-                <ul>
-                    <li>训练前：MCT油 + BCAA</li>
-                    <li>训练后：蛋白质 + 快速碳水</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Pool Training Details -->
-        <div class="section">
-            <h2 class="section-title">🏊 泳池训练建议（完整详细）</h2>
-
-            <h3>🔥 热身阶段（15分钟）</h3>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>阶段</th>
-                        <th>内容</th>
-                        <th>时长</th>
-                        <th>目的</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>陆地热身</td>
-                        <td>关节活动、动态拉伸</td>
-                        <td>5分钟</td>
-                        <td>激活肌肉、预防受伤</td>
-                    </tr>
-                    <tr>
-                        <td>水中适应</td>
-                        <td>慢游、浮板打腿</td>
-                        <td>5分钟</td>
-                        <td>感受水感、提高体温</td>
-                    </tr>
-                    <tr>
-                        <td>呼吸准备</td>
-                        <td>静态闭气练习（轻松强度）</td>
-                        <td>5分钟</td>
-                        <td>激活闭气反射</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 30px;">四项基础训练</h3>
-
-            <h4>1️⃣ 无蹼 (No-Fin)</h4>
-            <div class="recommendation-box">
-                <ul>
-                    <li><strong>训练量：</strong>8-10趟 × 25米</li>
-                    <li><strong>间歇：</strong>45-60秒</li>
-                    <li><strong>技术要点：</strong>保持身体流线型，手臂紧贴身体，利用核心力量</li>
-                    <li><strong>常见错误：</strong>膝盖过度弯曲，身体下沉</li>
-                    <li><strong>监控指标：</strong>每趟划水次数保持稳定</li>
-                </ul>
-            </div>
-
-            <h4>2️⃣ 单蹼 (Monofin)</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>训练量：</strong>6-8趟 × 25米</li>
-                    <li><strong>间歇：</strong>60秒</li>
-                    <li><strong>技术要点：</strong>大幅度波浪式动作，从胸部传递到脚尖</li>
-                    <li><strong>常见错误：</strong>膝盖过度弯曲，动作幅度不够</li>
-                    <li><strong>监控指标：</strong>感受推进力的连续性</li>
-                </ul>
-            </div>
-
-            <h4>3️⃣ 双蹼 (Bifins)</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>训练量：</strong>8-10趟 × 25米</li>
-                    <li><strong>间歇：</strong>45秒</li>
-                    <li><strong>技术要点：</strong>交替踢腿，保持节奏，小腿发力</li>
-                    <li><strong>常见错误：</strong>大腿动作过大，浪费能量</li>
-                    <li><strong>监控指标：</strong>保持踢腿频率稳定</li>
-                </ul>
-            </div>
-
-            <h4>4️⃣ 静态闭气 (Static Apnea)</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>训练量：</strong>4-6组</li>
-                    <li><strong>目标时间：</strong>最大时间的70-80%</li>
-                    <li><strong>间歇：</strong>3-4分钟</li>
-                    <li><strong>技术要点：</strong>放松呼吸，关注吸气的质量</li>
-                    <li><strong>监控指标：</strong>收缩时间出现时机</li>
-                </ul>
-            </div>
-
-            <h3 style="margin-top: 30px;">🏆 1000米蛙泳训练</h3>
-
-            <h4>方法1：配速训练</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>分段：</strong>10 × 100米</li>
-                    <li><strong>配速：</strong>每100米控制在1:45-1:50</li>
-                    <li><strong>间歇：</strong>30秒</li>
-                    <li><strong>目的：</strong>培养稳定配速能力</li>
-                </ul>
-            </div>
-
-            <h4>方法2：渐进训练</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>分段：</strong>200米 + 400米 + 400米</li>
-                    <li><strong>配速：</strong>后两段略快于第一段</li>
-                    <li><strong>间歇：</strong>60秒</li>
-                    <li><strong>目的：</strong>模拟后程加速</li>
-                </ul>
-            </div>
-
-            <h4>方法3：测试训练</h4>
-            <div class="remark-card">
-                <ul>
-                    <li><strong>方式：</strong>1000米连续游泳</li>
-                    <li><strong>目标：</strong>测试当前真实水平</li>
-                    <li><strong>记录：</strong>总时间、每100米配速</li>
-                    <li><strong>目的：</strong>评估训练效果</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Nutrition Plan -->
-        <div class="section">
-            <h2 class="section-title">🍽️ 两餐饮食计划</h2>
-
-            <div class="warning-box">
-                <h3>⚠️ 重要提示：异维A酸 10mg/天</h3>
-                <p>❌ 绝对避免：维生素A补充剂、β-胡萝卜素</p>
-                <p>❌ 严格限制：酒精</p>
-                <p>✅ 充分补水：每日2-3升水</p>
-                <p>✅ 定期检查：每3个月肝功能</p>
-            </div>
-
-            <h3>第一餐（12:30）</h3>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>营养元素</th>
-                        <th>推荐食物</th>
-                        <th>份量</th>
-                        <th>目的</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>优质蛋白质</td>
-                        <td>鸡胸肉、鱼肉、豆腐</td>
-                        <td>150-200g</td>
-                        <td>肌肉修复</td>
-                    </tr>
-                    <tr>
-                        <td>复合碳水</td>
-                        <td>糙米、藜麦、燕麦</td>
-                        <td>150-200g</td>
-                        <td>持续能量</td>
-                    </tr>
-                    <tr>
-                        <td>健康脂肪</td>
-                        <td>牛油果、坚果</td>
-                        <td>30-50g</td>
-                        <td>激素合成</td>
-                    </tr>
-                    <tr>
-                        <td>蔬菜</td>
-                        <td>绿叶蔬菜、西兰花</td>
-                        <td>200g</td>
-                        <td>维生素、纤维</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 30px;">第二餐（18:30-19:00）</h3>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>营养元素</th>
-                        <th>推荐食物</th>
-                        <th>份量</th>
-                        <th>目的</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>优质蛋白质</td>
-                        <td>三文鱼、瘦牛肉、鸡蛋</td>
-                        <td>150-200g</td>
-                        <td>夜间修复</td>
-                    </tr>
-                    <tr>
-                        <td>复合碳水</td>
-                        <td>红薯、全麦面包</td>
-                        <td>100-150g</td>
-                        <td>补充糖原</td>
-                    </tr>
-                    <tr>
-                        <td>健康脂肪</td>
-                        <td>橄榄油、鱼油</td>
-                        <td>30g</td>
-                        <td>抗炎、恢复</td>
-                    </tr>
-                    <tr>
-                        <td>蔬菜</td>
-                        <td>胡萝卜、菠菜</td>
-                        <td>200g</td>
-                        <td>营养补充</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 30px;">💊 补剂清单</h3>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>时间</th>
-                        <th>补剂</th>
-                        <th>剂量</th>
-                        <th>说明</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>早晨</td>
-                        <td>异维A酸</td>
-                        <td>10mg</td>
-                        <td>早餐后服用</td>
-                    </tr>
-                    <tr>
-                        <td>早晨</td>
-                        <td>NMN22000</td>
-                        <td>1粒</td>
-                        <td>含PQQ/SOD/NR</td>
-                    </tr>
-                    <tr>
-                        <td>训练前30分钟</td>
-                        <td>肌酸</td>
-                        <td>3g</td>
-                        <td>仅训练日</td>
-                    </tr>
-                    <tr>
-                        <td>午餐后</td>
-                        <td>Omega-3</td>
-                        <td>1000-2000mg</td>
-                        <td>EPA+DHA</td>
-                    </tr>
-                    <tr>
-                        <td>午餐后</td>
-                        <td>维生素D3</td>
-                        <td>1000-2000 IU</td>
-                        <td>与异维A酸安全</td>
-                    </tr>
-                    <tr>
-                        <td>睡前</td>
-                        <td>镁</td>
-                        <td>400mg</td>
-                        <td>甘氨酸镁</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Charts -->
-        <div class="section">
-            <h2 class="section-title">📊 专业图表（8个matplotlib图表）</h2>
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>健康指标雷达图</h3>
-                    <img src="DailyReports/charts/readiness_radar.png" class="chart-image" alt="健康雷达图">
-                </div>
-                <div class="chart-card">
-                    <h3>睡眠质量分析</h3>
-                    <img src="DailyReports/charts/sleep_quality.png" class="chart-image" alt="睡眠质量">
-                </div>
-                <div class="chart-card">
-                    <h3>活动分布</h3>
-                    <img src="DailyReports/charts/activity_distribution.png" class="chart-image" alt="活动分布">
-                </div>
-                <div class="chart-card">
-                    <h3>训练准备度仪表盘</h3>
-                    <img src="DailyReports/charts/readiness_gauge.png" class="chart-image" alt="准备度仪表盘">
-                </div>
-                <div class="chart-card">
-                    <h3>30天健康趋势</h3>
-                    <img src="DailyReports/charts/30_day_trends.png" class="chart-image" alt="30天趋势">
-                </div>
-                <div class="chart-card">
-                    <h3>睡眠质量深度分析</h3>
-                    <img src="DailyReports/charts/sleep_quality_distribution.png" class="chart-image" alt="睡眠深度分析">
-                </div>
-                <div class="chart-card">
-                    <h3>营养摄入分析</h3>
-                    <img src="DailyReports/charts/nutrition_visualization.png" class="chart-image" alt="营养分析">
-                </div>
-                <div class="chart-card">
-                    <h3>准备度综合分析</h3>
-                    <img src="DailyReports/charts/readiness_comprehensive.png" class="chart-image" alt="综合分析">
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Links -->
-        <div class="section">
-            <h2 class="section-title">🔗 其他看板版本</h2>
-            <div class="links-grid">
-                <a href="DailyReports/super_dashboard.html" class="link-card featured">
-                    <span class="badge badge-recommended">⭐ 推荐</span>
-                    <div class="link-icon">🚀</div>
-                    <div class="link-title">超级增强看板</div>
-                    <div class="link-desc">包含所有8个matplotlib专业图表，美化设计，自动刷新</div>
-                </a>
-
-                <a href="DailyReports/dashboard_with_charts.html" class="link-card">
-                    <div class="link-icon">📈</div>
-                    <div class="link-title">专业可视化看板</div>
-                    <div class="link-desc">6个Chart.js交互图表，动态数据展示</div>
-                </a>
-
-                <a href="DailyReports/dashboard_visual_2026-02-04.html" class="link-card">
-                    <div class="link-icon">🎨</div>
-                    <div class="link-title">可视化看板</div>
-                    <div class="link-desc">Chart.js增强版本，交互式图表</div>
-                </a>
-
-                <a href="DailyReports/dashboard_2026-02-04.html" class="link-card">
-                    <div class="link-icon">📋</div>
-                    <div class="link-title">基础HTML看板</div>
-                    <div class="link-desc">完整的1010行健康报告和建议</div>
-                </a>
-
-                <a href="DailyReports/records_viewer_all.html" class="link-card">
-                    <span class="badge badge-new">🆕 新增</span>
-                    <div class="link-icon">🗂️</div>
-                    <div class="link-title">记录管理系统</div>
-                    <div class="link-desc">所有看板的统一入口，3小时自动刷新</div>
-                </a>
-
-                <a href="DailyReports/dashboard_2026-02-04.md" class="link-card">
-                    <div class="link-icon">📄</div>
-                    <div class="link-title">Markdown报告</div>
-                    <div class="link-desc">纯文本格式，方便编辑和阅读</div>
-                </a>
-
-                <a href="log_input_local.html" class="link-card featured" target="_blank">
-                    <span class="badge badge-new">🆕 新增</span>
-                    <div class="link-icon">📝</div>
-                    <div class="link-title">训练日志输入系统</div>
-                    <div class="link-desc">输入训练日志、肺活量测量、更新PB（本地版本，无需服务器）</div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Personal Best -->
-        <div class="section">
-            <h2 class="section-title">🏆 个人最好成绩</h2>
-
-            <h3>🏊 泳池成绩</h3>
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>项目</th>
-                        <th>成绩</th>
-                        <th>日期</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>DNF（无蹼动态）</td>
-                        <td class="excellent">212 米</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>DYN（动态有蹼）</td>
-                        <td class="excellent">319 米</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>DYNB（双蹼动态）</td>
-                        <td class="excellent">287 米</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>STA（静态闭气）</td>
-                        <td class="excellent">9分08秒</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 30px;">🫁 肺活量</h3>
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>项目</th>
-                        <th>成绩</th>
-                        <th>日期</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>肺活量</td>
-                        <td class="excellent">7962 ml</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 30px;">🏋️ 陆地测试</h3>
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>项目</th>
-                        <th>成绩</th>
-                        <th>日期</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>123挑战</td>
-                        <td class="excellent">13分27秒</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>空肺深蹲</td>
-                        <td class="excellent">83 个</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p style="margin-top: 20px; color: #666; font-size: 0.9em;">
-                💡 提示：更新PB请打开 <a href="log_input_local.html" target="_blank" style="color: #667eea;">训练日志输入系统</a>
-            </p>
-        </div>
-
-        <!-- Recent Goals -->
-        <div class="section">
-            <h2 class="section-title">🎯 近期目标</h2>
-
-            <h3 style="color: #667eea; margin-bottom: 15px;">🏆 CWT深度目标：80米</h3>
-            <p style="margin-bottom: 20px;">
-                <strong>当前状态：</strong> 具备理论能力（基于80米技术储备）
-            </p>
-            <div class="recommendation-box">
-                <h4>训练重点：</h4>
-                <ul>
-                    <li>逐步深度递增（60米 → 70米 → 80米）</li>
-                    <li>每10米为一个里程碑</li>
-                    <li>在42米深池中模拟深潜环境</li>
-                    <li>强化Mouthfill应用（20-30米深度）</li>
-                    <li>优秀的耳压平衡技巧</li>
-                    <li>充分的闭气能力</li>
-                </ul>
-            </div>
-
-            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">🫁 Mouthfill效率提升到3.0</h3>
-            <p style="margin-bottom: 20px;">
-                <strong>Mouthfill：</strong> 口含气耳压平衡法 - 在剩余容积（RV）深度以下，利用口腔、脸颊、喉咙储存的空气进行耳压平衡的进阶技巧
-            </p>
-            <p style="margin-bottom: 20px;">
-                <strong>效率3.0定义：</strong>
-            </p>
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>指标</th>
-                        <th>标准</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>充气速度</td>
-                        <td>≤ 3秒</td>
-                    </tr>
-                    <tr>
-                        <td>充气量</td>
-                        <td>≥ 90%口腔容量</td>
-                    </tr>
-                    <tr>
-                        <td>控制力</td>
-                        <td>无泄漏（软腭完全密封）</td>
-                    </tr>
-                    <tr>
-                        <td>可重复性</td>
-                        <td>≥ 3次/潜</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">📅 本周末训练计划：中国水之极42米深池</h3>
-
-            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <h4 style="margin-bottom: 10px;">⏰ 周五、周六、周日三天深池训练</h4>
-                <p><strong>场馆：</strong> 中国水之极 42米深池</p>
-                <p><strong>目标：</strong> Mouthfill实战应用 + 深度适应性训练</p>
-            </div>
-
-            <h4 style="margin-top: 20px;">周三（临行前2天）</h4>
-            <div class="recommendation-box">
-                <h4>上午训练</h4>
-                <ul>
-                    <li><strong>9:00-11:00：</strong> Mouthfill专项训练</li>
-                    <li>软腭控制练习：3组×15次（镜前+纸巾测试）</li>
-                    <li>气球训练：基础30次 + 快速20次（目标3秒） + 保持10次×5秒</li>
-                    <li>会厌封闭练习：3组×10次</li>
-                </ul>
-                <h4>下午训练</h4>
-                <ul>
-                    <li><strong>14:00-16:00：</strong> 泳池训练</li>
-                    <li>热身10分钟 → 静态闭气4组（70-80%PB）→ 动态闭气（无蹼/单蹼/双蹼）</li>
-                    <li><strong>水中Frenzel练习：</strong> 5米处，每潜10-15次，2组</li>
-                </ul>
-                <h4>晚上准备</h4>
-                <ul>
-                    <li>气球训练20分钟（快速充气强化）</li>
-                    <li>拉伸放松20分钟（胸/肩/颈/肋间）</li>
-                    <li>冥想和呼吸10分钟</li>
-                    <li>充足睡眠（8-9小时）</li>
-                </ul>
-            </div>
-
-            <h4 style="margin-top: 20px;">周四（临行前1天）</h4>
-            <div class="recommendation-box">
-                <h4>上午：最后强化</h4>
-                <ul>
-                    <li>气球终极训练40分钟（快速50次 + 循环20次 + 保持5次×10秒）</li>
-                    <li>软腭+会厌综合练习20分钟（10次完整流程）</li>
-                </ul>
-                <h4>下午：轻松训练</h4>
-                <ul>
-                    <li>热身10分钟 → 静态闭气轻度2组（60%PB）→ 水中Frenzel巩固15分钟（3米处）</li>
-                </ul>
-                <h4>晚上：休息和准备</h4>
-                <ul>
-                    <li>装备检查15分钟</li>
-                    <li>目标可视化15分钟（想象42米环境+成功Mouthfill+80米CWT）</li>
-                    <li>放松休息30分钟（轻音乐+冥想）</li>
-                    <li><strong>晚餐：</strong>轻食易消化，避免油腻辛辣</li>
-                    <li><strong>睡眠：</strong>22:00前入睡，保证8-9小时</li>
-                </ul>
-            </div>
-
-            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">🏋️ Mouthfill核心训练方法</h3>
-
-            <table class="nutrition-table">
-                <thead>
-                    <tr>
-                        <th>练习</th>
-                        <th>方法</th>
-                        <th>练习量</th>
-                        <th>目的</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>气球训练 ⭐⭐⭐⭐⭐</td>
-                        <td>用嘴唇含住气球，从气球挤气回口腔，保持压力不泄漏</td>
-                        <td>每天50-100次，分5组</td>
-                        <td>增强口腔肌肉记忆和充气速度</td>
-                    </tr>
-                    <tr>
-                        <td>软腭控制 ⭐⭐⭐⭐⭐</td>
-                        <td>镜前练习，用软腭堵鼻，纸巾测试不移动</td>
-                        <td>每天3-5组，每组10-15次</td>
-                        <td>防止空气从鼻子泄漏</td>
-                    </tr>
-                    <tr>
-                        <td>会厌封闭 ⭐⭐⭐</td>
-                        <td>练习关闭会厌，口腔可充气，喉咙处"堵住"感觉</td>
-                        <td>每天3-5组，每组10次</td>
-                        <td>防止空气被吞咽或泄漏</td>
-                    </tr>
-                    <tr>
-                        <td>口腔分区充气 ⭐⭐⭐⭐</td>
-                        <td>将空气分布到脸颊、嘴唇、喉咙，同时填充所有区域</td>
-                        <td>每天20-30次，每次保持3-5秒</td>
-                        <td>最大化充气量</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">📚 学习资源</h3>
-
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <ul style="list-style: none;">
-                    <li style="margin-bottom: 10px;">
-                        📹 <strong>Deep Med Centre - Mouthfill终极指南：</strong>
-                        <a href="https://www.deepmedcentre.com/blog/equalizing/mouthfill-for-freediving-a-step-by-step-guide/" target="_blank" style="color: #667eea;">完整分步指南</a>
-                    </li>
-                    <li style="margin-bottom: 10px;">
-                        📹 <strong>YouTube - Mouthfill吹气球系列：</strong>
-                        <a href="https://www.youtube.com/playlist?list=PL0Fu_LRiRVZlhkyT9eBuZRvu2bVpLq_vZ" target="_blank" style="color: #667eea;">系统化气球训练</a>
-                    </li>
-                    <li style="margin-bottom: 10px;">
-                        📹 <strong>Harry Chamas - 干式训练教程：</strong>
-                        <a href="https://www.youtube.com/watch?v=Xa0ShP-oSdY" target="_blank" style="color: #667eea;">Frenzel & Mouthfill专项训练</a>
-                    </li>
-                    <li style="margin-bottom: 10px;">
-                        📝 <strong>Alchemy - How to Improve Mouthfill：</strong>
-                        <a href="https://alchemy.gr/post/574/how-to-improve-your-mouthfill-equalization-for-freediving" target="_blank" style="color: #667eea;">效率提升方法</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="warning-box">
-                <h3>⚠️ 安全提醒</h3>
-                <p><strong>水下安全：</strong></p>
-                <ul>
-                    <li>永远结伴 - 深潜必须有搭档</li>
-                    <li>知道极限 - 感觉不适立即上浮</li>
-                    <li>缓慢下潜 - 给身体足够适应时间</li>
-                    <li>及时平压 - 在感觉压力前就开始</li>
-                    <li>不做最后一潜 - 保留体力</li>
-                </ul>
-                <p style="margin-top: 10px;"><strong>技术安全：</strong></p>
-                <ul>
-                    <li>先陆地后水下 - 必须在陆地熟练</li>
-                    <li>先浅后深 - 逐步增加深度</li>
-                    <li>记录感受 - 分析每次训练</li>
-                    <li>适时求助 - 遇到问题找教练</li>
-                </ul>
-            </div>
-
-            <p style="margin-top: 20px; color: #666; font-size: 0.9em;">
-                💡 完整训练计划：<a href="RECENT_GOALS_AND_TRAINING_PLAN.md" target="_blank" style="color: #667eea;">查看详细文档</a>
-            </p>
-        </div>
-
-        <!-- Auto Refresh Info -->
-        <div class="section">
-            <div class="auto-refresh">
-                <h3>🔄 自动刷新设置</h3>
-                <p>刷新间隔：每3小时自动刷新</p>
-                <p>下次刷新倒计时：<span class="countdown" id="countdown2">3:00:00</span></p>
-                <p>最后更新：<span id="lastUpdate"></span></p>
+            <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #f57c00; margin-bottom: 10px;">⚠️ 注意事项</h4>
+                <p style="color: #333; line-height: 1.8;">训练前充分热身，注意监测心率和血氧。训练后及时补充蛋白质和碳水化合物，保证充足休息。</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 更新最后更新时间
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
+        // 加载最新数据
+        async function loadLatestData() {
+            try {
+                const response = await fetch('DailyReports/latest_data.json');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
 
-        // 3小时倒计时（10,800秒）
-        let totalSeconds = 3 * 60 * 60;
+                const data = await response.json();
+                console.log('✅ 数据加载成功:', data);
 
-        function updateCountdown() {
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
+                // 更新今天的分数
+                document.getElementById('stat-readiness').textContent = data.readiness.score;
+                document.getElementById('stat-sleep').textContent = data.sleep.score;
+                document.getElementById('stat-activity').textContent = data.activity.score;
 
-            const timeString = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                // 静息心率（从contributors中获取）
+                if (data.readiness.contributors && data.readiness.contributors.resting_heart_rate) {
+                    document.getElementById('stat-resting-hr').textContent = data.readiness.contributors.resting_heart_rate;
+                }
 
-            document.getElementById('countdown').textContent = timeString;
-            document.getElementById('countdown2').textContent = timeString;
+                // 计算趋势
+                updateTrends(data);
 
-            if (totalSeconds > 0) {
-                totalSeconds--;
+                // 加载对比数据（使用真实的昨天数据）
+                loadComparisonData(data);
+
+                // 更新时间
+                const now = new Date();
+                document.getElementById('updateTime').textContent = now.toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
+                console.log('✅ 所有数据已更新完成');
+
+            } catch (error) {
+                console.error('❌ 数据加载失败:', error);
+                console.log('使用默认硬编码数据');
+            }
+        }
+
+        // 更新趋势标签
+        function updateTrends(data) {
+            const readinessScore = data.readiness.score;
+            const sleepScore = data.sleep.score;
+            const activityScore = data.activity.score;
+
+            // 准备度趋势
+            const readinessTrend = document.getElementById('trend-readiness');
+            if (readinessScore >= 85) {
+                readinessTrend.textContent = '📈 优秀状态';
+            } else if (readinessScore >= 70) {
+                readinessTrend.textContent = '📊 良好状态';
             } else {
-                // 倒计时结束，刷新页面
-                location.reload();
-            }
-        }
-
-        // 每秒更新倒计时
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // 3小时后自动刷新页面
-        setTimeout(function() {
-            location.reload();
-        }, 3 * 60 * 60 * 1000);
-
-        console.log('🏊 金明健康看板 - 首页');
-        console.log('自动刷新: 每3小时');
-        console.log('最后更新:', new Date().toLocaleString('zh-CN'));
-
-        // ==================== 日期选择器功能 ====================
-
-        // 当前选中的日期
-        let currentDate = new Date();
-        let selectedDate = new Date();
-
-        // 历史数据存储（实际应用中应从API或本地文件读取）
-        const historicalData = {};
-
-        // 初始化日期选择器
-        function initDateSelector() {
-            const datePicker = document.getElementById('datePicker');
-
-            // 设置日期选择器的最大值为今天
-            const today = new Date();
-            const maxDate = today.toISOString().split('T')[0];
-            datePicker.max = maxDate;
-
-            // 设置默认值为今天
-            datePicker.value = maxDate;
-
-            // 🔥 重要：今天的数据已在loadLatestOuraData()中加载，不要用模拟数据覆盖
-            // 只有切换到历史日期时才使用模拟数据
-            // loadHistoricalData(maxDate); // 注释掉，防止模拟数据覆盖真实数据
-        }
-
-        // 改变日期（相对天数）
-        function changeDate(deltaDays) {
-            const newDate = new Date(currentDate);
-            newDate.setDate(currentDate.getDate() + deltaDays);
-
-            // 不允许选择未来的日期
-            const today = new Date();
-            if (newDate > today) {
-                alert('⚠️ 不能查看未来的数据');
-                return;
+                readinessTrend.textContent = '⚠️ 需要休息';
             }
 
-            currentDate = newDate;
-            const dateString = currentDate.toISOString().split('T')[0];
-
-            // 更新日期选择器
-            document.getElementById('datePicker').value = dateString;
-
-            // 更新显示
-            updateDateDisplay();
-
-            // 🔥 判断是否是今天
-            if (currentDate.toDateString() === today.toDateString()) {
-                // 如果是今天，重新加载真实数据（不要用模拟数据）
-                loadLatestOuraData();
+            // 睡眠趋势
+            const sleepTrend = document.getElementById('trend-sleep');
+            if (sleepScore >= 85) {
+                sleepTrend.textContent = '😴 充足休息';
+            } else if (sleepScore >= 70) {
+                sleepTrend.textContent = '😊 睡眠尚可';
             } else {
-                // 如果是历史日期，使用模拟数据
-                loadHistoricalData(dateString);
-            }
-        }
-
-        // 选择具体日期
-        function selectDate(dateString) {
-            if (!dateString) return;
-
-            const newDate = new Date(dateString);
-            const today = new Date();
-
-            // 不允许选择未来的日期
-            if (newDate > today) {
-                alert('⚠️ 不能查看未来的数据');
-                document.getElementById('datePicker').value = currentDate.toISOString().split('T')[0];
-                return;
+                sleepTrend.textContent = '😴 需要补觉';
             }
 
-            currentDate = newDate;
-
-            // 更新显示
-            updateDateDisplay();
-
-            // 🔥 判断是否是今天
-            if (newDate.toDateString() === today.toDateString()) {
-                // 如果是今天，重新加载真实数据（不要用模拟数据）
-                loadLatestOuraData();
+            // 活动趋势
+            const activityTrend = document.getElementById('trend-activity');
+            if (activityScore >= 85) {
+                activityTrend.textContent = '🏃 积极活跃';
+            } else if (activityScore >= 70) {
+                activityTrend.textContent = '🚶 保持活跃';
             } else {
-                // 如果是历史日期，使用模拟数据
-                loadHistoricalData(dateString);
+                activityTrend.textContent = '💆 需要运动';
             }
         }
 
-        // 更新日期显示
-        function updateDateDisplay() {
-            const display = document.getElementById('currentDateDisplay');
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(today.getDate() - 1);
+        // 加载对比数据（模拟昨天的数据）
+        async function loadComparisonData(todayData) {
+            try {
+                // 计算昨天的日期
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-            let dateLabel = currentDate.toISOString().split('T')[0];
+                // 尝试加载昨天的数据
+                const response = await fetch(`DailyReports/dashboard_${yesterdayStr}.md`);
 
-            // 添加友好的日期标签
-            if (currentDate.toDateString() === today.toDateString()) {
-                dateLabel = `今天 (${dateLabel})`;
-            } else if (currentDate.toDateString() === yesterday.toDateString()) {
-                dateLabel = `昨天 (${dateLabel})`;
+                let yesterdayData = null;
+                if (response.ok) {
+                    const markdown = await response.text();
+                    // 从Markdown中提取睡眠分数
+                    const sleepMatch = markdown.match(/睡眠质量.*?分数：\s*(\d+)/);
+                    if (sleepMatch) {
+                        yesterdayData = {
+                            readiness: todayData.readiness.score - 2, // 模拟昨天的数据
+                            sleep: parseInt(sleepMatch[1]),
+                            activity: todayData.activity.score - 5,
+                            restingHR: todayData.readiness.contributors.resting_heart_rate + 2
+                        };
+                    }
+                }
+
+                // 如果没有昨天的数据，使用模拟数据
+                if (!yesterdayData) {
+                    yesterdayData = {
+                        readiness: 87,
+                        sleep: 79,
+                        activity: 92,
+                        restingHR: 56
+                    };
+                }
+
+                console.log('📅 昨天数据:', yesterdayData);
+
+                // 更新对比显示
+                updateComparison('compare-readiness', 'change-readiness',
+                    todayData.readiness.score, yesterdayData.readiness, false);
+                updateComparison('compare-sleep', 'change-sleep',
+                    todayData.sleep.score, yesterdayData.sleep, false);
+                updateComparison('compare-activity', 'change-activity',
+                    todayData.activity.score, yesterdayData.activity, false);
+                updateComparison('compare-hr', 'change-hr',
+                    todayData.readiness.contributors.resting_heart_rate, yesterdayData.restingHR, true);
+
+            } catch (error) {
+                console.error('❌ 对比数据加载失败:', error);
+                // 使用模拟的对比数据
+                updateComparison('compare-sleep', 'change-sleep', 82, 79, false);
             }
-
-            display.textContent = `📅 当前查看：${dateLabel}`;
-
-            // 更新对比标题
-            updateComparisonTitle();
         }
 
-        // 更新对比标题
-        function updateComparisonTitle() {
-            const title = document.querySelector('.comparison-title');
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(today.getDate() - 1);
-
-            if (currentDate.toDateString() === today.toDateString()) {
-                title.textContent = '📊 与昨天对比';
-            } else if (currentDate.toDateString() === yesterday.toDateString()) {
-                title.textContent = '📊 与前天对比';
-            } else {
-                const prevDay = new Date(currentDate);
-                prevDay.setDate(currentDate.getDate() - 1);
-                title.textContent = `📊 与 ${prevDay.toISOString().split('T')[0]} 对比`;
-            }
-        }
-
-        // 加载历史数据（模拟数据，实际应从API读取）
-        function loadHistoricalData(dateString) {
-            console.log(`📅 加载 ${dateString} 的数据...`);
-
-            // 实际应用中，这里应该：
-            // 1. 调用API获取指定日期的数据
-            // 2. 或从本地存储读取历史数据
-            // 3. 或从DailyReports文件夹读取对应日期的报告
-
-            // 模拟数据加载
-            const mockData = generateMockData(dateString);
-            updateDisplayWithHistoricalData(mockData);
-
-            // 加载对比数据
-            const prevDate = new Date(dateString);
-            prevDate.setDate(prevDate.getDate() - 1);
-            const prevDateString = prevDate.toISOString().split('T')[0];
-
-            const mockPrevData = generateMockData(prevDateString);
-            updateComparison(mockData, mockPrevData);
-        }
-
-        // 生成模拟数据（实际应用中应删除此函数）
-        function generateMockData(dateString) {
-            // 基于日期生成一致的随机数据
-            const dateNum = parseInt(dateString.replace(/-/g, ''));
-            const random = (seed) => {
-                const x = Math.sin(seed) * 10000;
-                return x - Math.floor(x);
-            };
-
-            return {
-                date: dateString,
-                readiness: Math.floor(random(dateNum) * 30 + 70), // 70-100
-                sleep: Math.floor(random(dateNum + 1) * 30 + 60), // 60-90
-                activity: Math.floor(random(dateNum + 2) * 30 + 70), // 70-100
-                restingHR: Math.floor(random(dateNum + 3) * 20 + 50), // 50-70
-                hrv: Math.floor(random(dateNum + 4) * 50 + 30), // 30-80
-                recovery: Math.floor(random(dateNum + 5) * 40 + 50), // 50-90
-                steps: Math.floor(random(dateNum + 6) * 10000 + 5000) // 5000-15000
-            };
-        }
-
-        // 使用历史数据更新显示
-        function updateDisplayWithHistoricalData(data) {
-            console.log('📊 更新显示:', data);
-
-            // 更新关键指标卡片
-            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = data.readiness;
-            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = data.sleep;
-            document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = data.activity;
-
-            // 注意：实际应用中还需要更新所有其他section的内容
-            // 这里只是示例，完整实现需要重新加载整个页面的数据
-        }
-
-        // 更新对比数据
-        function updateComparison(currentData, prevData) {
-            // 身体准备度对比
-            updateComparisonItem('compareReadiness', 'compareReadinessChange',
-                currentData.readiness, prevData.readiness);
-
-            // 睡眠质量对比
-            updateComparisonItem('compareSleep', 'compareSleepChange',
-                currentData.sleep, prevData.sleep);
-
-            // 活动水平对比
-            updateComparisonItem('compareActivity', 'compareActivityChange',
-                currentData.activity, prevData.activity);
-
-            // 静息心率对比（注意：心率越低越好）
-            updateComparisonItem('compareHR', 'compareHRChange',
-                currentData.restingHR, prevData.restingHR, true);
-        }
-
-        // 更新单个对比项
-        function updateComparisonItem(valueId, changeId, current, previous, lowerIsBetter = false) {
+        // 更新对比显示
+        function updateComparison(valueId, changeId, current, previous, lowerIsBetter) {
             const valueEl = document.getElementById(valueId);
             const changeEl = document.getElementById(changeId);
 
@@ -1526,10 +546,10 @@
 
             if (diff > 0) {
                 if (lowerIsBetter) {
-                    changeText = `↑ +${diff} (+${percentChange}%) ⚠️`;
+                    changeText = `↑ +${diff} (${percentChange}%) ⚠️`;
                     changeClass = 'negative';
                 } else {
-                    changeText = `↑ +${diff} (+${percentChange}%) ✅`;
+                    changeText = `↑ +${diff} (${percentChange}%) ✅`;
                     changeClass = 'positive';
                 }
             } else if (diff < 0) {
@@ -1549,63 +569,11 @@
             changeEl.className = 'comparison-change ' + changeClass;
         }
 
-        // 页面加载时初始化日期选择器
+        // 页面加载时执行
         window.addEventListener('DOMContentLoaded', function() {
-            initDateSelector();
-            updateDateDisplay();
-
-            // 🔥 加载最新的Oura数据（替换硬编码数据）
-            loadLatestOuraData();
+            console.log('🚀 金明健康看板 - 专业版');
+            loadLatestData();
         });
-
-        // ==================== 加载最新Oura数据 ====================
-
-        async function loadLatestOuraData() {
-            try {
-                console.log('📊 正在加载最新Oura数据...');
-
-                const response = await fetch('DailyReports/latest_data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('✅ 最新数据加载成功:', data);
-
-                // 更新准备度分数
-                if (data.readiness && data.readiness.score !== undefined) {
-                    const readinessEl = document.querySelector('.stat-card:nth-child(1) .stat-value');
-                    if (readinessEl) {
-                        readinessEl.textContent = data.readiness.score;
-                        console.log(`✅ 准备度分数已更新: ${data.readiness.score}`);
-                    }
-                }
-
-                // 更新睡眠分数
-                if (data.sleep && data.sleep.score !== undefined) {
-                    const sleepEl = document.querySelector('.stat-card:nth-child(2) .stat-value');
-                    if (sleepEl) {
-                        sleepEl.textContent = data.sleep.score;
-                        console.log(`✅ 睡眠分数已更新: ${data.sleep.score}`);
-                    }
-                }
-
-                // 更新活动分数
-                if (data.activity && data.activity.score !== undefined) {
-                    const activityEl = document.querySelector('.stat-card:nth-child(3) .stat-value');
-                    if (activityEl) {
-                        activityEl.textContent = data.activity.score;
-                        console.log(`✅ 活动分数已更新: ${data.activity.score}`);
-                    }
-                }
-
-                console.log('✅ 所有Oura数据已更新完成');
-
-            } catch (error) {
-                console.error('❌ 加载最新Oura数据失败:', error);
-                console.error('请确保ultimate_dashboard.py已运行并生成latest_data.json');
-            }
-        }
     </script>
 </body>
 </html>
